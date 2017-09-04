@@ -1,0 +1,31 @@
+{
+  "name": "stagehuntersapi",
+  "version": "1.0.0",
+  "description": "API for the StageHunters application",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aeekayy/StageHuntersAPI.git"
+  },
+  "keywords": [
+    "StageHunters",
+    "stage",
+    "production"
+  ],
+  "author": "EthosLA",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aeekayy/StageHuntersAPI/issues"
+  },
+  "homepage": "https://github.com/aeekayy/StageHuntersAPI#readme",
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  },
+  "dependencies": {
+    "express": "^4.15.4"
+  }
+}
