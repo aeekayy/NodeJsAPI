@@ -1,0 +1,25 @@
+{
+  "development": {
+    "username": "cwjpjpis",
+    "password": "kNUhF7bsc-YX9iR0MicKLLdcMPl0Vmjk",
+    "database": "cwjpjpis",
+    "host": "pellefant.db.elephantsql.com",
+    "port": 5432, 
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "cwjpjpis",
+    "password": "kNUhF7bsc-YX9iR0MicKLLdcMPl0Vmjk",
+    "database": "cwjpjpis",
+    "host": "pellefant.db.elephantsql.com",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "",
+    "host": "stagehunters-base.cxbbgapn8sjn.us-west-2.rds.amazonaws.com:5432",
+    "dialect": "mysql"
+  }
+}
