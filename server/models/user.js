@@ -20,12 +20,12 @@ module.exports = function(sequelize, DataTypes) {
     }
   });
 
-  User.associate = (models) => {
-    User.hasMany(models.UserType, {
-      foreignKey: 'userId',
-      as: 'userTypes'
-    });
-  };
+  //User.associate = (models) => {
+  //  User.hasMany(models.UserType, {
+  //    foreignKey: 'userId',
+  //    as: 'userTypes'
+  //  });
+  //};
 
   return User;
 };
