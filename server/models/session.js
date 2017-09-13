@@ -12,12 +12,12 @@ module.exports = function(sequelize, DataTypes) {
 	allowNull: false,
     },
     source_ip: {
-        type: DataTypes.VARCHAR(15),
+        type: DataTypes.STRING(15),
 	isIP: true
     },
     active: { 
 	type: DataTypes.DATE,
-	defaultValue: DataTypes.literal('now() + interval \'3 hours\''),
+	defaultValue: DataTypes.NOW
     },
   }, {
     classMethods: {

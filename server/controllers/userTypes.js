@@ -30,18 +30,4 @@ module.exports = {
 			.then(userTypes => res.status(200).send(userTypes))
 			.catch(error => res.status(400).send(error));
 		},
-	login(req, res) {
-		return Session
-			.find(req.params.username, {})
-			.then( session => {
-				if(!session) {
-				return res.status(401).send({
-					message: 'User Session Not Found',
-				});
-			}
-			return res.status(200).send(session); 
-			})
-			.catch(error => res.status(400).send(error));
-			
-		},
 };

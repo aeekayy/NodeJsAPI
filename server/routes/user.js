@@ -3,6 +3,7 @@
  * @requires userTypesController
  */
 const loginController = require('../controllers').login;
+const userController = require('../controllers').user;
 const userTypesController = require('../controllers').userTypes; 
 
 /** Create a User Type.
@@ -23,6 +24,8 @@ const userTypesController = require('../controllers').userTypes;
  * @function userTypesController.listAll
  */
 module.exports = (app) => {
+	app.post('/api/user/create', userController.create);
+	app.post('/api/users', userController.listAll);
 	app.get('/api/user/type/:userTypeId', userTypesController.retrieve);
 	app.get('/api/user/types', userTypesController.listAll);
 	app.post('/api/user/type', userTypesController.create);
