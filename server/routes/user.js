@@ -2,6 +2,7 @@
  * @module routers/user
  * @requires userTypesController
  */
+const loginController = require('../controllers').login;
 const userTypesController = require('../controllers').userTypes; 
 
 /** Create a User Type.
@@ -25,4 +26,5 @@ module.exports = (app) => {
 	app.get('/api/user/type/:userTypeId', userTypesController.retrieve);
 	app.get('/api/user/types', userTypesController.listAll);
 	app.post('/api/user/type', userTypesController.create);
+	app.post('/api/user/login', loginController.login); 
 };
