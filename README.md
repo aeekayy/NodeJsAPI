@@ -5,3 +5,4 @@
 * Getting Started with Node, Express and Postgres Using Sequelize (https://scotch.io/tutorials/getting-started-with-node-express-and-postgres-using-sequelize)
 * Understanding Extending Sequelize Model (https://github.com/sequelize/sequelize/issues/6524)
 * Sequelize Documentation (http://docs.sequelizejs.com/manual/tutorial/models-definition.html#model-validations)
+* Login Example (https://github.com/iamakimmer/sequelize-express-example/blob/master/routes/index.js)

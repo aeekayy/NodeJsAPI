@@ -1,12 +1,14 @@
 'use strict';
-var bcrypt = require("bcrypt-nodejs"); 
+var Promise = require("bluebird"); 
+var bcrypt =Promise.promisifyAll(require("bcrypt-nodejs"));
+const SALT_ROUNDS = 10; 
 
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define('User', {
-    username: DataTypes.STRING,
-    email: { type: DataTypes.STRING, allowNull: false, isEmail: true },
+    username: { type: DataTypes.STRING, unique: true, allowNull: false, validate: { notEmpty: true } }, 
+    email: { type: DataTypes.STRING, unique: true, allowNull: false, isEmail: true },
     phone_number: DataTypes.STRING,
-    password_hash: DataTypes.STRING,
+    password_hash: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { notEmpty: true } }, 
     password_salt: DataTypes.STRING,
     first_name: DataTypes.STRING,
     last_name: DataTypes.STRING,
@@ -29,13 +31,21 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
     },
-    /*hooks: {
-	beforeCreate: function(user, password) {
-		user.password_salt = bcrypt.genSaltSync(10);
-		user.password_hash = bcrypt.hashSync(user.password, user.password_salt, null);
-		return user; 
+    hooks: {
+	beforeCreate: function(user, {}) {
+		bcrypt.genSalt(SALT_ROUNDS, function(err, salt) {
+			bcrypt.hash(user.password_hash, salt, function(){}, function(err, hash) {
+				if (err) {
+					return sequelize.Promise.reject(err); 
+				}
+
+	        		user.setDataValue('password_hash',hash);
+				user.setDataValue('password_salt',salt);
+			});
+
+		});
 	}
-    },*/
+    },
     instanceMethods: {
 	generateHash: function(password) {
 		return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null); 
@@ -53,20 +63,5 @@ module.exports = function(sequelize, DataTypes) {
   //  });
   //};
 
-  User.hook('beforeCreate', function(user, {}, next) {
-    bcrypt.genSaltSync(10, function(err, salt) {
-      if (err) {
-        return next(err); 
-      }
-      bcrypt.hashSync(user.password_hash, salt, function(err, hash) {
-        if (err) {
-          return next(err); 
-        }
-        user.password_hash = hash;
-        user.password_salt = salt; 
-        return next(null, user); 
-      });
-    });
-  });
   return User;
 };

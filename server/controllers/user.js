@@ -1,10 +1,8 @@
-const Session = require('../models').Session;
-const UserType = require('../models').UserType; 
-const User = require('../models').User;
+const db = require('../models'); 
 
 module.exports = {
 	create(req, res) {
-		return User
+		return db.User
 			.create({
 				first_name: req.body.first_name,
 				last_name: req.body.last_name, 
@@ -16,13 +14,13 @@ module.exports = {
 			.catch(error => res.status(400).send(error));
 		},
 	listAll(req, res) {
-                return User
+                return db.User
                         .all()
                         .then(users => res.status(200).send(users))
                         .catch(error => res.status(400).send(error));
                 },
 	resetUsers(req, res) {
-		return User
+		return db.User
 			.destroy({ where: {}, truncate: true})
 			.then(() => res.status(200).send())
 			.catch(error => res.status(400).send(error));
