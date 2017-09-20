@@ -29,5 +29,5 @@ module.exports = (app) => {
 	app.get('/api/user/type/:userTypeId', userTypesController.retrieve);
 	app.get('/api/user/types', userTypesController.listAll);
 	app.post('/api/user/type', userTypesController.create);
-	app.post('/api/user/login', loginController.login); 
+	//app.post('/api/user/login', loginController.loginUser); 
 };

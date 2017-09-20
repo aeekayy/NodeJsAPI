@@ -2,7 +2,7 @@ const Session = require('../models').Session;
 const UserType = require('../models').UserType; 
 
 module.exports = {
-	login(req, res) {
+	loginUser(req, res) {
 		return Session
 			.findOne( { where: {username: req.params.username } })
 			.then( session => {
