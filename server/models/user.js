@@ -58,7 +58,7 @@ module.exports = function(sequelize, DataTypes) {
       if (err) {
         return next(err); 
       }
-      bcrypt.hash(user.password, salt, function(err, hash) {
+      bcrypt.hashSync(user.password_hash, salt, function(err, hash) {
         if (err) {
           return next(err); 
         }

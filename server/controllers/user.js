@@ -21,5 +21,11 @@ module.exports = {
                         .then(users => res.status(200).send(users))
                         .catch(error => res.status(400).send(error));
                 },
+	resetUsers(req, res) {
+		return User
+			.destroy({ where: {}, truncate: true})
+			.then(() => res.status(200).send())
+			.catch(error => res.status(400).send(error));
+		},
 
 };
