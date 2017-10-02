@@ -1,14 +1,15 @@
 'use strict';
-var Promise = require("bluebird"); 
-var bcrypt =Promise.promisifyAll(require("bcrypt-nodejs"));
-const SALT_ROUNDS = 10; 
+var Promise = require("bluebird");
+// var bcrypt = Promise.promisifyAll(require("bcrypt-nodejs"));
+var bcrypt = require("bcrypt-nodejs");
+const SALT_ROUNDS = 10;
 
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define('User', {
-    username: { type: DataTypes.STRING, unique: true, allowNull: false, validate: { notEmpty: true } }, 
+    username: { type: DataTypes.STRING, unique: true, allowNull: false, validate: { notEmpty: true } },
     email: { type: DataTypes.STRING, unique: true, allowNull: false, isEmail: true },
     phone_number: DataTypes.STRING,
-    password_hash: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { notEmpty: true } }, 
+    password_hash: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { notEmpty: true } },
     password_salt: DataTypes.STRING,
     first_name: DataTypes.STRING,
     last_name: DataTypes.STRING,
@@ -22,50 +23,54 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
       },
       validPassword: function(password, passwd, callback) {
+        console.log('entered validPassword1');
         bcrypt.compare(password, passwd, function(err, isMatch) {
           if (isMatch) {
             return callback(null, true);
           } else {
-            return callback(null, false); 
+            return callback(null, false);
           }
         });
       },
     },
     hooks: {
-	beforeCreate: (user,  options, cb) => {
-		if(!user.getDataValue('email')) {
-			return sequelize.Promise.reject('No e-mail address provided.'); 
-		}
+    	beforeCreate: (user,  options, cb) => {
+        return new Promise(function (resolve, reject) {
+    		if(!user.getDataValue('email')) {
+    			return sequelize.Promise.reject('No e-mail address provided.');
+    		}
 
-		user.email = user.email.toLowerCase(); 
+    		user.email = user.email.toLowerCase();
 
-		if(!user.getDataValue('password_hash')) {
-			return sequelize.Promise.reject('No password provided.');
-		}
+        // console.log('user input password_hash: ', user.getDataValue('password_hash'));
+        // console.log('user object => \n', user);
+    		if(!user.getDataValue('password_hash')) {
+    			return sequelize.Promise.reject('No password provided.');
+    		}
 
-		bcrypt.genSalt(SALT_ROUNDS)
-		.then(function(salt) {
-			bcrypt.hash(user.password_hash, salt, null);
-		})
-		.then(function(hash) {
-			if (err) {
-				return sequelize.Promise.reject(err); 
-			}
-
-        		user.setDataValue('password_hash',hash);
-			user.setDataValue('password_salt',salt);
-			
-			return cb(null, user); 
-		});
-	}
+        bcrypt.genSalt(SALT_ROUNDS,
+          function(err, salt) {
+            bcrypt.hash(user.getDataValue('password_hash'), salt, null,
+              function(err, hash) {
+                user.setDataValue('password_hash',hash);
+                user.setDataValue('password_salt',salt);
+                resolve(user);
+              }
+            );
+          }
+        );
+    	});
+    }
     },
     instanceMethods: {
-	generateHash: function(password) {
-		return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null); 
-	},
-	validPassword: function(password) {
-		return bcrypt.compareSync(password, this.password); 
-	}
+    	generateHash: function(password) {
+        console.log('entered generateHash');
+    		return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+    	},
+    	validPassword: function(password) {
+        console.log('entered validPassword2');
+    		return bcrypt.compareSync(password, this.password);
+    	}
     }
   });
 
