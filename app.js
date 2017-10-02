@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser'); 
 const errorhandler = require('errorhandler'); 
 const passport = require('passport'); 
+const passportConfig = require('./server/config/local');
 const session = require('express-session'); 
 
 // Set up the express app
@@ -46,4 +47,4 @@ app.post('*', (req, res) => res.status(400).send({
 	message: 'I think you found a black hole. Good for you. Tell NASA.',
 }));
 
-module.exports = app; 
+module.exports = app;

@@ -1,4 +1,6 @@
 const db = require('../models'); 
+const middleware = require('../../config/middleware'); 
+const passport = require('passport'); 
 
 module.exports = {
 	create(req, res) {

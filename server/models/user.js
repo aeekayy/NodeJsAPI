@@ -32,17 +32,30 @@ module.exports = function(sequelize, DataTypes) {
       },
     },
     hooks: {
-	beforeCreate: function(user, {}) {
-		bcrypt.genSalt(SALT_ROUNDS, function(err, salt) {
-			bcrypt.hash(user.password_hash, salt, function(){}, function(err, hash) {
-				if (err) {
-					return sequelize.Promise.reject(err); 
-				}
+	beforeCreate: (user,  options, cb) => {
+		if(!user.getDataValue('email')) {
+			return sequelize.Promise.reject('No e-mail address provided.'); 
+		}
 
-	        		user.setDataValue('password_hash',hash);
-				user.setDataValue('password_salt',salt);
-			});
+		user.email = user.email.toLowerCase(); 
 
+		if(!user.getDataValue('password_hash')) {
+			return sequelize.Promise.reject('No password provided.');
+		}
+
+		bcrypt.genSalt(SALT_ROUNDS)
+		.then(function(salt) {
+			bcrypt.hash(user.password_hash, salt, null);
+		})
+		.then(function(hash) {
+			if (err) {
+				return sequelize.Promise.reject(err); 
+			}
+
+        		user.setDataValue('password_hash',hash);
+			user.setDataValue('password_salt',salt);
+			
+			return cb(null, user); 
 		});
 	}
     },

@@ -1,5 +1,5 @@
 exports.authenticated = function(req, res, next) {
-	if(re.isAuthenticated()) {
+	if(req.isAuthenticated()) {
 		next();
 	} else {
 		res.redirect('/api/v1/login');
