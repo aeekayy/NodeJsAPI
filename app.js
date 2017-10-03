@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const errorhandler = require('errorhandler');
 const passport = require('passport');
-// const passportConfig = require('./server/config/local');
+const passportConfig = require('./server/config/local');
 const session = require('express-session'); 
 
 // Set up the express app

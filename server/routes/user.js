@@ -25,8 +25,9 @@ const userTypesController = require('../controllers').userTypes;
  */
 module.exports = (app) => {
 	app.post('/api/user/create', userController.create);
-	app.post('/api/users', userController.listAll);
+	app.get('/api/users', userController.listAll);
 	app.post('/api/users/reset', userController.resetUsers);
+	app.post('/api/users/delete', userController.deleteUser);
 	app.get('/api/user/type/:userTypeId', userTypesController.retrieve);
 	app.get('/api/user/types', userTypesController.listAll);
 	app.post('/api/user/type', userTypesController.create);
