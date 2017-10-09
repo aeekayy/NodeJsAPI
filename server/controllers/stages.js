@@ -25,7 +25,7 @@ module.exports = {
 			}, {
 				include: [{
 					association: db.StageSpace,
-					include: [ db.StageSpace.Addresses ]
+					include: [ db.StageSpace.StageAddresses ]
 				}]
 			}
 			)
