@@ -64,12 +64,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     instanceMethods: {
     	generateHash: function(password) {
-        console.log('entered generateHash');
     		return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
     	},
     	validPassword: function(password) {
-        console.log('entered validPassword2');
-    		return bcrypt.compareSync(password, this.password);
+    		return bcrypt.compareSync(password, this.password_hash);
     	}
     }
   });

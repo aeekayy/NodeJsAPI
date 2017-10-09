@@ -1,5 +1,5 @@
 const db = require('../models'); 
-const middleware = require('../config/middleware'); 
+const local_passport = require('../config/local'); 
 const apiconfig = require('../config/apiconfig'); 
 const passport = require('passport'); 
 
@@ -23,16 +23,14 @@ module.exports = {
                         .catch(error => res.status(400).send(error));
                 },
 	login(req, res) {
-		passport.authenticate('local', (err, user, info) => {
-			if(err) { err => res.status(500).send(err); }
-			if(!user) { res.status(404).send("User not found."); }
-			if(user) {
-				req.login(user, function(err) {
-					if(err) { err => res.status(500).send(err); }
-					res.status(200).send('Login successful'); 
-				});
-			}
+		passport.authenticate('local', {
+				failureRedirect: '/Account/Login' 
 			});
+		(req, res, next) => {
+				return req.session.save((error) => res.status(400).send(error));
+
+				return res.redirect('/Dashboard');
+			}
 		}, 
 	resetUsers(req, res) {
 		return db.User

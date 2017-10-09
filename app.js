@@ -8,6 +8,8 @@ const passport = require('passport');
 const passportConfig = require('./server/config/local');
 const session = require('express-session'); 
 
+const db = require('./server/models/index');
+
 // Set up the express app
 const app = express();
 
