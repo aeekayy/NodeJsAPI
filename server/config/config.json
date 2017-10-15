@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "cwjpjpis",
-    "password": "kNUhF7bsc-YX9iR0MicKLLdcMPl0Vmjk",
-    "database": "cwjpjpis",
-    "host": "pellefant.db.elephantsql.com",
+    "username": "stagehunters",
+    "password": "4PbKFTqQdx8xJqrj",
+    "database": "stagehuntersdb",
+    "host": "stagehunters-basedb.cxbbgapn8sjn.us-west-2.rds.amazonaws.com",
     "port": 5432,
     "dialect": "postgres"
   },

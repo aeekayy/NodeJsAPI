@@ -15,18 +15,11 @@ module.exports = {
 		return db.StageSpace
 			.create({
 				stage_name: req.body.stage_name, 
-				addresses: [{
-					stage_address_1: req.body.stage_address_1,
-					stage_address_2: req.body.stage_address_2, 
-					stage_city: req.body.stage_city,
-					stage_state: req.body.stage_state,
-					stage_zip: req.body.stage_zip
-				}]
-			}, {
-				include: [{
-					association: db.StageSpace,
-					include: [ db.StageSpace.StageAddresses ]
-				}]
+				stage_address_1: req.body.stage_address_1,
+				stage_address_2: req.body.stage_address_2, 
+				stage_city: req.body.stage_city,
+				stage_state: req.body.stage_state,
+				stage_zip: req.body.stage_zip
 			}
 			)
 			.then(stagespace => res.status(201).send(stagespace))

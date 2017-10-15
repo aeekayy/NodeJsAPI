@@ -11,15 +11,6 @@ module.exports = {
       stage_name: {
         type: Sequelize.STRING
       },
-      addresses: {
-	type: Sequelize.INTEGER, 
-	references: {
-		model: 'Addresses',
-		key: 'id'
-	},
-	onUpdate: 'cascade',
-	onDelete: 'cascade'
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
