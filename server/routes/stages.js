@@ -27,6 +27,7 @@ module.exports = (app) => {
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'create' ].join('/'), stagesController.createStageSpace);
 	app.get('/' + [ 'api', apiconfig.version, sub_name ].join('/'), stagesController.listAll);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'reset' ].join('/'), stagesController.resetStageSpaces);
+	app.post('/' + [ 'api', apiconfig.version, sub_name, 'search' ].join('/'), stagesController.searchStages);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'delete' ].join('/'), stagesController.deleteStageSpace);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'test' ].join('/'), stagesController.test); 
 };

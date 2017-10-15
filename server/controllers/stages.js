@@ -14,7 +14,8 @@ module.exports = {
 	createStageSpace(req, res) {
 		return db.StageSpace
 			.create({
-				stage_name: req.body.stage_name, 
+				stage_name: req.body.stage_name,
+				stage_description: req.body.stage_description,
 				stage_address_1: req.body.stage_address_1,
 				stage_address_2: req.body.stage_address_2, 
 				stage_city: req.body.stage_city,
@@ -24,6 +25,15 @@ module.exports = {
 			)
 			.then(stagespace => res.status(201).send(stagespace))
 			.catch(error => res.status(400).send(error));
+		},
+	searchStages(req, res) {
+		geocoder.geocode(req.body.user_location)
+			.then(geocoding => {
+				db.sequelize
+				.query("SELECT id, stage_name, stage_description, stage_coordinate, stage_coordinate <@> POINT(" + geocoding[0].latitude + ", " + geocoding[0].longitude + ") as distance FROM \"StageSpaces\" WHERE search_stage_space_idx @@ plainto_tsquery('english', '" + req.body.search_query + "') LIMIT 10;")
+				.then(stagespaces => res.status(200).send(stagespaces))
+				.catch(error => res.status(400).send(error)); 
+			});
 		},
 	listAll(req, res) {
                 return db.StageSpace

@@ -6,3 +6,4 @@
 * Understanding Extending Sequelize Model (https://github.com/sequelize/sequelize/issues/6524)
 * Sequelize Documentation (http://docs.sequelizejs.com/manual/tutorial/models-definition.html#model-validations)
 * Login Example (https://github.com/iamakimmer/sequelize-express-example/blob/master/routes/index.js)
+* Full Text Search (https://github.com/mujz/pg-search-sequelize)

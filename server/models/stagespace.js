@@ -17,13 +17,11 @@ module.exports = function(sequelize, DataTypes) {
     stage_state: { type: DataTypes.STRING(3) },
     stage_zip: { type: DataTypes.STRING(10) },
     stage_coordinate: { type: DataTypes.GEOMETRY('POINT') },
+    stage_description: { type: DataTypes.TEXT }, 
     stage_map_data: { type: DataTypes.JSON }
   }, {
     classMethods: {
       associate: function(models) {
-      },
-
-      addFullTextIndex: function() {
       }
     },
     hooks: {
@@ -48,10 +46,6 @@ module.exports = function(sequelize, DataTypes) {
     instanceMethods: {
 
     }
-  });
-
-  StageSpace.sync({
-	force: true
   });
 
   return StageSpace;
