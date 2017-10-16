@@ -30,4 +30,5 @@ module.exports = (app) => {
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'search' ].join('/'), stagesController.searchStages);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'delete' ].join('/'), stagesController.deleteStageSpace);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'test' ].join('/'), stagesController.test); 
+	app.get('/' + [ 'api', apiconfig.version, sub_name, ':id' ].join('/'), stagesController.getStage);
 };

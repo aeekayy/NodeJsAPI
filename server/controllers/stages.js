@@ -26,11 +26,18 @@ module.exports = {
 			.then(stagespace => res.status(201).send(stagespace))
 			.catch(error => res.status(400).send(error));
 		},
+	getStage(req, res) {
+		return db.StageSpace
+			.findById(req.params.id)
+			.then(stagespace => res.status(200).send(stagespace))
+			.catch(error => res.status(400).send(error));
+		},
 	searchStages(req, res) {
-		geocoder.geocode(req.body.user_location)
+		if(!req.body.search_offset) { return res.status(400).send("Please provide an offset."); }
+		geocoder.geocode(req.body.search_user_location)
 			.then(geocoding => {
 				db.sequelize
-				.query("SELECT id, stage_name, stage_description, stage_coordinate, stage_coordinate <@> POINT(" + geocoding[0].latitude + ", " + geocoding[0].longitude + ") as distance FROM \"StageSpaces\" WHERE search_stage_space_idx @@ plainto_tsquery('english', '" + req.body.search_query + "') LIMIT 10;")
+				.query("SELECT id, stage_name, stage_description, stage_coordinate, round(CAST(ST_DistanceSphere(stage_coordinate, ST_GeomFromText('POINT(" + geocoding[0].latitude + " " + geocoding[0].longitude + ")', 4326)) as numeric)*0.000621371, 2) as distance, ts_rank_cd(search_stage_space_idx, to_tsquery('" + req.body.search_query + "')) as rank FROM \"StageSpaces\" WHERE search_stage_space_idx @@ plainto_tsquery('english', '" + req.body.search_query + "') ORDER BY rank DESC, distance DESC LIMIT 10 OFFSET 10*" + req.body.search_offset + ";")
 				.then(stagespaces => res.status(200).send(stagespaces))
 				.catch(error => res.status(400).send(error)); 
 			});
