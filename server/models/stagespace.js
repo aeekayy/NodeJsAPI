@@ -17,7 +17,10 @@ module.exports = function(sequelize, DataTypes) {
     stage_state: { type: DataTypes.STRING(3) },
     stage_zip: { type: DataTypes.STRING(10) },
     stage_coordinate: { type: DataTypes.GEOMETRY('POINT') },
-    stage_description: { type: DataTypes.TEXT }, 
+    stage_description: { type: DataTypes.TEXT },
+    stage_rate_per_hour: { type: DataTypes.FLOAT }, 
+    stage_fix_rate: { type: DataTypes.FLOAT }, 
+    stage_hours: { type: DataTypes.INTEGER }, 
     stage_map_data: { type: DataTypes.JSON }
   }, {
     classMethods: {

@@ -1,7 +1,6 @@
 const db = require('../models'); 
 const local_passport = require('../config/local'); 
 const apiconfig = require('../config/apiconfig'); 
-const passport = require('passport'); 
 
 module.exports = {
 	create(req, res) {
@@ -23,7 +22,8 @@ module.exports = {
                         .catch(error => res.status(400).send(error));
                 },
 	login(req, res) {
-		passport.authenticate('local', {
+		local_passport.authenticate('local', {
+				successRedirect: '/Account',
 				failureRedirect: '/Account/Login' 
 			});
 		(req, res, next) => {
