@@ -1,8 +1,11 @@
 const db = require('../models'); 
 const local_passport = require('../config/local'); 
 const apiconfig = require('../config/apiconfig'); 
+<<<<<<< HEAD
 const passport = require('passport'); 
 var Promise = require("bluebird");
+=======
+>>>>>>> 348878a0a2cb362a7107e2ed606becb3ef650f3c
 
 module.exports = {
 	create(req, res) {
