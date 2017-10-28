@@ -2,6 +2,7 @@ const db = require('../models');
 const local_passport = require('../config/local'); 
 const apiconfig = require('../config/apiconfig'); 
 const passport = require('passport'); 
+var Promise = require("bluebird");
 
 module.exports = {
 	create(req, res) {
@@ -23,14 +24,15 @@ module.exports = {
                         .catch(error => res.status(400).send(error));
                 },
 	login(req, res) {
-		passport.authenticate('local', {
-				failureRedirect: '/Account/Login' 
-			});
-		(req, res, next) => {
-				return req.session.save((error) => res.status(400).send(error));
-
-				return res.redirect('/Dashboard');
-			}
+		let promise = new Promise(function(resolve, reject) {
+			passport.authenticate('local', function(err, user, info) {
+				if (err) {
+					reject(err); 
+				}
+				resolve(user);
+			})(req, res);
+		});
+		return promise;
 		}, 
 	resetUsers(req, res) {
 		return db.User
