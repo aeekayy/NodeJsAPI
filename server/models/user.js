@@ -21,6 +21,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
+	User.hasMany( models.Organization, { as: 'organizations' } );
       },
       validPassword: function(password, passwd, callback) {
         console.log('entered validPassword1');
@@ -78,6 +79,6 @@ module.exports = function(sequelize, DataTypes) {
   //    as: 'userTypes'
   //  });
   //};
-
+  
   return User;
 };

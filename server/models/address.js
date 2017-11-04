@@ -21,9 +21,5 @@ module.exports = function(sequelize, DataTypes) {
    }
   });
 
-  StageAddress.sync({
-        force: true
-  });
-
   return StageAddress;
 };

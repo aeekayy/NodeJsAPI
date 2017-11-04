@@ -1,14 +1,14 @@
 const db = require('../models'); 
 const local_passport = require('../config/local'); 
 const apiconfig = require('../config/apiconfig'); 
-<<<<<<< HEAD
+const infusionsoft = require('../config/infusionsoft'); 
 const passport = require('passport'); 
 var Promise = require("bluebird");
-=======
->>>>>>> 348878a0a2cb362a7107e2ed606becb3ef650f3c
 
 module.exports = {
 	create(req, res) {
+		infusionsoft.ContactService
+			.add( { FirstName: req.body.first_name, LastName: req.body.last_name, Email: req.body.email } );
 		return db.User
 			.create({
 				first_name: req.body.first_name,
