@@ -9,6 +9,10 @@ module.exports = {
 	create(req, res) {
 		infusionsoft.ContactService
 			.add( { FirstName: req.body.first_name, LastName: req.body.last_name, Email: req.body.email } );
+		db.Organization
+			.create({
+				organization_type: req.body.type	
+			});
 		return db.User
 			.create({
 				first_name: req.body.first_name,

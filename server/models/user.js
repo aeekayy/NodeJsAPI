@@ -24,7 +24,6 @@ module.exports = function(sequelize, DataTypes) {
 	User.hasMany( models.Organization, { as: 'organizations' } );
       },
       validPassword: function(password, passwd, callback) {
-        console.log('entered validPassword1');
         bcrypt.compare(password, passwd, function(err, isMatch) {
           if (isMatch) {
             return callback(null, true);

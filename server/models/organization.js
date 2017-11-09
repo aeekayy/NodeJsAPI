@@ -16,6 +16,7 @@ module.exports = function(sequelize, DataTypes) {
     organization_city: { type: DataTypes.STRING(64) },
     organization_state: { type: DataTypes.STRING(3) },
     organization_zip: { type: DataTypes.STRING(10) },
+    organization_type: { type: DataTypes.ENUM( 'production', 'stage' ) }, 
     organization_coordinate: { type: DataTypes.GEOMETRY('POINT') },
     organization_description: { type: DataTypes.TEXT },
     organization_map_data: { type: DataTypes.JSON }
