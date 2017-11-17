@@ -13,7 +13,8 @@ module.exports = {
 			.create({
 				organization_type: req.body.type,
 				organization_city: "Long Beach", 
-				organization_state: "CA"
+				organization_state: "CA",
+				organization_type: req.body.UserType
 			});
 		return db.User
 			.create({

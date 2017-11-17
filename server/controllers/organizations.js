@@ -10,22 +10,23 @@ module.exports = {
 	createOrganization(req, res) {
 		return db.Organization
 			.create({
-				stage_name: req.body.stage_name,
-				stage_description: req.body.stage_description,
-				stage_address_1: req.body.stage_address_1,
-				stage_address_2: req.body.stage_address_2, 
-				stage_city: req.body.stage_city,
-				stage_state: req.body.stage_state,
-				stage_zip: req.body.stage_zip
+				organization_name: req.body.organization_name,
+				organization_description: req.body.organization_description,
+				organization_address_1: req.body.organization_address_1,
+				organization_address_2: req.body.organization_address_2, 
+				organization_city: req.body.organization_city,
+				organization_state: req.body.organization_state,
+				organization_zip: req.body.organization_zip,
+				organization_type: req.body.organization_type
 			}
 			)
-			.then(stagespace => res.status(201).send(stagespace))
+			.then(organizationspace => res.status(201).send(organizationspace))
 			.catch(error => res.status(400).send(error));
 		},
 	getStage(req, res) {
 		return db.Organization
 			.findById(req.params.id)
-			.then(stagespace => res.status(200).send(stagespace))
+			.then(organizationspace => res.status(200).send(organizationspace))
 			.catch(error => res.status(400).send(error));
 		},
 	searchStages(req, res) {
@@ -33,15 +34,15 @@ module.exports = {
 		geocoder.geocode(req.body.search_user_location)
 			.then(geocoding => {
 				db.sequelize
-				.query("SELECT id, stage_name, stage_description, stage_coordinate, round(CAST(ST_DistanceSphere(stage_coordinate, ST_GeomFromText('POINT(" + geocoding[0].latitude + " " + geocoding[0].longitude + ")', 4326)) as numeric)*0.000621371, 2) as distance, ts_rank_cd(search_stage_space_idx, to_tsquery('" + req.body.search_query + "')) as rank FROM \"Organizations\" WHERE search_stage_space_idx @@ plainto_tsquery('english', '" + req.body.search_query + "') ORDER BY rank DESC, distance DESC LIMIT 10 OFFSET 10*" + req.body.search_offset + ";")
-				.then(stagespaces => res.status(200).send(stagespaces))
+				.query("SELECT id, organization_name, organization_description, organization_coordinate, round(CAST(ST_DistanceSphere(organization_coordinate, ST_GeomFromText('POINT(" + geocoding[0].latitude + " " + geocoding[0].longitude + ")', 4326)) as numeric)*0.000621371, 2) as distance, ts_rank_cd(search_organization_space_idx, to_tsquery('" + req.body.search_query + "')) as rank FROM \"Organizations\" WHERE search_organization_space_idx @@ plainto_tsquery('english', '" + req.body.search_query + "') ORDER BY rank DESC, distance DESC LIMIT 10 OFFSET 10*" + req.body.search_offset + ";")
+				.then(organizationspaces => res.status(200).send(organizationspaces))
 				.catch(error => res.status(400).send(error)); 
 			});
 		},
 	listAll(req, res) {
                 return db.Organization
                         .all()
-                        .then(stagespaces => res.status(200).send(stagespaces))
+                        .then(organizationspaces => res.status(200).send(organizationspaces))
                         .catch(error => res.status(400).send(error));
                 },
 	resetOrganizations(req, res) {
