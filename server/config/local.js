@@ -18,6 +18,10 @@ passport.use(new LocalStrategy(function(username, password, done) {
 			}
 
 			if(bcrypt.compareSync(password, user.password_hash)) {
+				session = db.Session.findOne({ where: {username: username}}); 
+				if(!session) {
+					db.Session.Create( { username: username });
+				}
 				return done(null, user); 
 			}
 			else {

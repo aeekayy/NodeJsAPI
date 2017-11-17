@@ -16,8 +16,10 @@ module.exports = function(sequelize, DataTypes) {
 	allowNull: false
     },
     expiration: { 
-	type: DataTypes.DATE, 
-	allowNull: false
+	type: DataTypes.DATE,
+	allowNull: false,
+	defaultValue: sequelize.literal('CURRENT_TIMESTAMP + interval \'6 hours\'')
+    }
   }, {
     classMethods: {
       associate: function(models) {

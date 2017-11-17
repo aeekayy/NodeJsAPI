@@ -11,7 +11,9 @@ module.exports = {
 			.add( { FirstName: req.body.first_name, LastName: req.body.last_name, Email: req.body.email } );
 		db.Organization
 			.create({
-				organization_type: req.body.type	
+				organization_type: req.body.type,
+				organization_city: "Long Beach", 
+				organization_state: "CA"
 			});
 		return db.User
 			.create({
@@ -36,11 +38,17 @@ module.exports = {
 				if (err) {
 					reject(err); 
 				}
-				resolve(user);
+				session = db.Session
+					.findOne({ 
+						where: {
+							username: user.username
+						}
+					}); 
+				resolve(session);
 			})(req, res);
 		});
 		return promise
-			.then(user => res.status(200).send(user))
+			.then(session => res.status(200).send(session))
 			.catch(err => res.status(400).send(err));
 		}, 
 	resetUsers(req, res) {

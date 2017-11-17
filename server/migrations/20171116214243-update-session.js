@@ -26,6 +26,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    }, {
+	timestamps: true,
+	underscored: true, 
     });
   },
   down: function(queryInterface, Sequelize) {
