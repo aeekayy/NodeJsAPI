@@ -30,4 +30,7 @@ module.exports = (app) => {
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'search' ].join('/'), organizationsController.searchStages);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'delete' ].join('/'), organizationsController.deleteOrganization);
 	app.get('/' + [ 'api', apiconfig.version, sub_name, ':id' ].join('/'), organizationsController.getStage);
+	app.post('/' + [ 'api', apiconfig.version, sub_name, ':id', 'subscribe' ].join('/'), organizationsController.createSubscription);
+	app.post('/' + [ 'api', apiconfig.version, sub_name, ':id', 'cancel-subscription' ].join('/'), organizationsController.deleteSubscription);
+	app.post('/' + [ 'api', apiconfig.version, sub_name, ':id', 'update-subscription' ].join('/'), organizationsController.updateSubscription); 
 };

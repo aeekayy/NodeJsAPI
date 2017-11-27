@@ -14,6 +14,7 @@ module.exports = {
 				organization_type: req.body.type,
 				organization_city: "Long Beach", 
 				organization_state: "CA",
+				orangization_email: req.body.email,
 				organization_type: req.body.UserType
 			});
 		return db.User

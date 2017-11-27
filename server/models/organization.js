@@ -20,7 +20,8 @@ module.exports = function(sequelize, DataTypes) {
     organization_coordinate: { type: DataTypes.GEOMETRY('POINT') },
     organization_email: { type: DataTypes.STRING(128), unique: true, isEmail: true },
     organization_description: { type: DataTypes.TEXT },
-    organization_map_data: { type: DataTypes.JSON }
+    organization_map_data: { type: DataTypes.JSON },
+    stripe_id: { type: DataTypes.STRING(64) }
   }, {
     classMethods: {
       associate: function(models) {
@@ -44,7 +45,17 @@ module.exports = function(sequelize, DataTypes) {
 			});
 			
 		});
-	}
+	},
+	afterCreate: (organization, options, cb) => {
+		return new Promise(function (resolve, reject) {
+			stripe.customers.create({
+				email: organization.organization_email
+			})
+			.then(customer => {
+				return organization.setDataValue('stripe_id', customer.id);
+				resolve(organization);
+			})
+	},
     },
     instanceMethods: {
 

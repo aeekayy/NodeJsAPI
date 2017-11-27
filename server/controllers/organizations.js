@@ -3,6 +3,7 @@ const db = require('../models');
 const node_geocoder = require('node-geocoder'); 
 const local_passport = require('../config/local'); 
 const passport = require('passport'); 
+const stripe = require('../config/stripe'); 
 
 var geocoder = node_geocoder(apiconfig.node_geocoder_options);
 
@@ -28,6 +29,44 @@ module.exports = {
 		return db.Organization
 			.findById(req.params.id)
 			.then(organization => res.status(200).send(organization))
+			.catch(error => res.status(400).send(error));
+		},
+	createSubscription(req, res) {
+		return db.Organization
+			.findById(req.params.id)
+			.then(organization => return stripe.subscriptions.create({
+				customer: organization.stripe_id,
+				items: [
+				{
+					plan: req.subscription_plan
+				},
+				]
+			})
+			.then(subscription => res.status(200).send(subscription))
+			.catch(error => res.status(400).send(error));
+		},
+	updateSubscription(req, res) {
+		return db.Organiztion
+			.findById(req.params.id)
+			.then(organization => {
+				return stripe.customers.retrieve({organization.stripe_id});
+			})
+			.then(customer => {
+				return stripe.subscriptions.update(customer.subscriptions.data[0], { tax_percent: 8.5 });
+			})
+			.then(subscription => res.status(200).send(subscription))
+			.catch(error => res.status(400).send(error));
+		},
+	deleteSubscription(req, res) { 
+		return db.Organization
+			.findById(req.params.id)
+			.then( organization => {
+				return stripe.customers.retrieve({organization.stripe_id});
+			})
+			.then(customer => {
+				return stripe.subscriptions.del(customer.subscriptions.data[0]);
+			})
+			.then(confirmation => res.status(200).send(confirmation))
 			.catch(error => res.status(400).send(error));
 		},
 	searchStages(req, res) {
