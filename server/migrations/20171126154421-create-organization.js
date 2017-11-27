@@ -18,6 +18,7 @@ module.exports = {
       organization_city: { type: Sequelize.STRING(64) },
       organization_state: { type: Sequelize.STRING(3) },
       organization_zip: { type: Sequelize.STRING(10) },
+      organization_email: { type: Sequelize.STRING(128), unique: true, isEmail: true },
       organization_coordinate: { type: Sequelize.GEOMETRY('POINT') },
       organization_description: { type: Sequelize.TEXT },
       organization_type: { type: Sequelize.ENUM('production', 'stage' ) }, 

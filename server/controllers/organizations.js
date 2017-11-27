@@ -17,16 +17,17 @@ module.exports = {
 				organization_city: req.body.organization_city,
 				organization_state: req.body.organization_state,
 				organization_zip: req.body.organization_zip,
+				organization_email: req.body.organization_email, 
 				organization_type: req.body.organization_type
 			}
 			)
-			.then(organizationspace => res.status(201).send(organizationspace))
+			.then(organization => res.status(201).send(organization))
 			.catch(error => res.status(400).send(error));
 		},
 	getStage(req, res) {
 		return db.Organization
 			.findById(req.params.id)
-			.then(organizationspace => res.status(200).send(organizationspace))
+			.then(organization => res.status(200).send(organization))
 			.catch(error => res.status(400).send(error));
 		},
 	searchStages(req, res) {
@@ -34,15 +35,15 @@ module.exports = {
 		geocoder.geocode(req.body.search_user_location)
 			.then(geocoding => {
 				db.sequelize
-				.query("SELECT id, organization_name, organization_description, organization_coordinate, round(CAST(ST_DistanceSphere(organization_coordinate, ST_GeomFromText('POINT(" + geocoding[0].latitude + " " + geocoding[0].longitude + ")', 4326)) as numeric)*0.000621371, 2) as distance, ts_rank_cd(search_organization_space_idx, to_tsquery('" + req.body.search_query + "')) as rank FROM \"Organizations\" WHERE search_organization_space_idx @@ plainto_tsquery('english', '" + req.body.search_query + "') ORDER BY rank DESC, distance DESC LIMIT 10 OFFSET 10*" + req.body.search_offset + ";")
-				.then(organizationspaces => res.status(200).send(organizationspaces))
+				.query("SELECT id, organization_name, organization_description, organization_coordinate, round(CAST(ST_DistanceSphere(organization_coordinate, ST_GeomFromText('POINT(" + geocoding[0].latitude + " " + geocoding[0].longitude + ")', 4326)) as numeric)*0.000621371, 2) as distance, ts_rank_cd(search_organization_idx, to_tsquery('" + req.body.search_query + "')) as rank FROM \"Organizations\" WHERE search_organization_idx @@ plainto_tsquery('english', '" + req.body.search_query + "') ORDER BY rank DESC, distance DESC LIMIT 10 OFFSET 10*" + req.body.search_offset + ";")
+				.then(organizations => res.status(200).send(organizations))
 				.catch(error => res.status(400).send(error)); 
 			});
 		},
 	listAll(req, res) {
                 return db.Organization
                         .all()
-                        .then(organizationspaces => res.status(200).send(organizationspaces))
+                        .then(organizations => res.status(200).send(organizations))
                         .catch(error => res.status(400).send(error));
                 },
 	resetOrganizations(req, res) {
