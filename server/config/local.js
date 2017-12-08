@@ -12,20 +12,15 @@ passport.use(new LocalStrategy(function(username, password, done) {
 	db.User.findOne({where: {username: username}})
 		.then(function(user, err) {
 			if (err) { return done(err); }
-			
-			if (!user) {
-				return done(null, false, { message: 'Incorrect credentials.' }); 
+			else if (!user) {
+				return done({ message: 'Incorrect credentials.' }); 
 			}
-
-			if(bcrypt.compareSync(password, user.password_hash)) {
-				session = db.Session.findOne({ where: {username: username}}); 
-				if(!session) {
-					db.Session.Create( { username: username });
-				}
-				return done(null, user); 
+			else if(bcrypt.compareSync(password, user.password_hash)) {
+				session = db.Session.findCreateFind({ where: {username: username}}).
+					then( function()  { return done(null, user)} );
 			}
 			else {
-				return done(null, false, { message: 'Incorrect credentials.' });
+				return done( { message: 'Incorrect credentials.' });
 			}
 	});
 }));

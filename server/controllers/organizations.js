@@ -34,14 +34,15 @@ module.exports = {
 	createSubscription(req, res) {
 		return db.Organization
 			.findById(req.params.id)
-			.then(organization => return stripe.subscriptions.create({
+			.then(organization => stripe.subscriptions.create({
 				customer: organization.stripe_id,
 				items: [
 				{
 					plan: req.subscription_plan
 				},
 				]
-			})
+				})
+			)
 			.then(subscription => res.status(200).send(subscription))
 			.catch(error => res.status(400).send(error));
 		},
@@ -49,7 +50,7 @@ module.exports = {
 		return db.Organiztion
 			.findById(req.params.id)
 			.then(organization => {
-				return stripe.customers.retrieve({organization.stripe_id});
+				return stripe.customers.retrieve(organization.stripe_id);
 			})
 			.then(customer => {
 				return stripe.subscriptions.update(customer.subscriptions.data[0], { tax_percent: 8.5 });
@@ -61,7 +62,7 @@ module.exports = {
 		return db.Organization
 			.findById(req.params.id)
 			.then( organization => {
-				return stripe.customers.retrieve({organization.stripe_id});
+				return stripe.customers.retrieve(organization.stripe_id);
 			})
 			.then(customer => {
 				return stripe.subscriptions.del(customer.subscriptions.data[0]);

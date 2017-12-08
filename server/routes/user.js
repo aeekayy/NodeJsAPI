@@ -30,6 +30,7 @@ module.exports = (app) => {
 	app.post('/api/' + apiconfig.version + '/users/reset', userController.resetUsers);
 	app.post('/api/' + apiconfig.version + '/users/delete', userController.deleteUser);
 	app.post('/api/' + apiconfig.version + '/user/login', userController.login);
+	app.get('/api/' + apiconfig.version + '/user/session', userController.session); 
 	app.get('/api/' + apiconfig.version + '/user/type/:userTypeId', userTypesController.retrieve);
 	app.get('/api/' + apiconfig.version + '/user/types', userTypesController.listAll);
 	app.post('/api/' + apiconfig.version + '/user/type', userTypesController.create);

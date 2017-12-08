@@ -40,19 +40,27 @@ module.exports = {
 				if (err) {
 					reject(err); 
 				}
-				session = db.Session
+				else { 
+					let session = db.Session
 					.findOne({ 
 						where: {
 							username: user.username
 						}
 					}); 
-				resolve(session);
+					resolve(session);
+				}
 			})(req, res);
 		});
 		return promise
 			.then(session => res.status(200).send(session))
-			.catch(err => res.status(400).send(err));
+			.catch(err => res.status(535).send(err));
 		}, 
+	session(req, res) {
+		console.log(req);
+		return db.Session.findById(req.body.session_id)
+			.then(session => res.status(200).send(session))
+			.catch(err => res.status(535).send(err)); 
+		},
 	resetUsers(req, res) {
 		return db.User
 			.destroy({ where: {}, truncate: true})

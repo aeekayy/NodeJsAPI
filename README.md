@@ -7,3 +7,7 @@
 * Sequelize Documentation (http://docs.sequelizejs.com/manual/tutorial/models-definition.html#model-validations)
 * Login Example (https://github.com/iamakimmer/sequelize-express-example/blob/master/routes/index.js)
 * Full Text Search (https://github.com/mujz/pg-search-sequelize)
+
+
+## Things To Do
+* Add an expiration for sessions. Auto delete expired sessions. 

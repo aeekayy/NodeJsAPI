@@ -55,7 +55,8 @@ module.exports = function(sequelize, DataTypes) {
 				return organization.setDataValue('stripe_id', customer.id);
 				resolve(organization);
 			})
-	},
+		});
+	}
     },
     instanceMethods: {
 
