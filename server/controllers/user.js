@@ -56,8 +56,7 @@ module.exports = {
 			.catch(err => res.status(535).send(err));
 		}, 
 	session(req, res) {
-		console.log(req);
-		return db.Session.findById(req.body.session_id)
+		return db.Session.findById((Object.keys(req.query.id).length === 0) ? req.body.session_id : req.query.id)
 			.then(session => res.status(200).send(session))
 			.catch(err => res.status(535).send(err)); 
 		},
