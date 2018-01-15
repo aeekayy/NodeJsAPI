@@ -28,6 +28,11 @@ module.exports = {
 			.then(user => res.status(201).send(user))
 			.catch(error => res.status(400).send(error));
 		},
+	getProfile(req, res) {
+		return db.sequelize.query('SELECT username, email, phone_number, first_name || \' \' || last_name AS full_name, organization_name, organization_address_1, organization_address_2, organization_city, "Organizations".organization_state, organization_type, organization_description FROM "Users" LEFT JOIN "Organizations" ON "Users".organization_id="Organizations".id WHERE username=:username LIMIT 1', { replacements: { username: req.query.username }, type: db.sequelize.QueryTypes.SELECT })
+		.then(users => res.status(200).send(users))
+		.catch(error => res.status(400).send(error));
+		}, 
 	listAll(req, res) {
                 return db.User
                         .all()
