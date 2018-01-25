@@ -25,6 +25,14 @@ const apiconfig = require('../config/apiconfig');
  * @function userTypesController.listAll
  */
 module.exports = (app) => {
+	// ACL stuff dealing with permissions 
+	app.get('/api/' + apiconfig.version + '/acl', userController.getAcl);
+	app.get('/api/' + apiconfig.version + '/acl/:sessionId', userController.getAcl);
+
+	// User type stuff
+	app.delete('/api/' + apiconfig.version + '/user/type', userController.deleteUserType);
+	app.post('/api/' + apiconfig.version + '/user/type', userController.createUserType); 
+
 	app.post('/api/' + apiconfig.version + '/user/create', userController.create);
 	app.get('/api/' + apiconfig.version + '/users', userController.listAll);
 	app.post('/api/' + apiconfig.version + '/users/reset', userController.resetUsers);
@@ -34,6 +42,5 @@ module.exports = (app) => {
 	app.get('/api/' + apiconfig.version + '/user/session', userController.session); 
 	app.get('/api/' + apiconfig.version + '/user/type/:userTypeId', userTypesController.retrieve);
 	app.get('/api/' + apiconfig.version + '/user/types', userTypesController.listAll);
-	app.post('/api/' + apiconfig.version + '/user/type', userTypesController.create);
 	//app.post('/api/user/login', loginController.loginUser); 
 };

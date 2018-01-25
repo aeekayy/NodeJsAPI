@@ -4,8 +4,42 @@ const apiconfig = require('../config/apiconfig');
 const infusionsoft = require('../config/infusionsoft'); 
 const passport = require('passport'); 
 var Promise = require("bluebird");
+const stringifyObject = require("stringify-object");
 
 module.exports = {
+	// get the permissions of the user. Can a user perform the action that they are trying to do
+	// 
+	getAcl(req, res) {
+		if(!req.params.sessionId && !req.body.sessionId) {
+			return res.status(401).send('{ "errors": "' + apiconfig.errors['401'] + '"}');
+		}
+		return db.Session.findById(req.params.sessionId, {})
+			.then(acl => res.status(200).send('{ "data": "' + true + '" }'))
+			.catch(error => res.status(400).send('{ "errors": "' + error + '"}'));	
+		},
+	// create a user type for the system 
+	createUserType(req, res) {
+			if(!req.body.typename || req.body.typename.trim() == "") {
+				return res.status(400).send('{ "errors": "' + apiconfig.errors['object_not_found'] + '" }');
+			} else {
+				return db.UserType.findOrCreate({ where: {typename: req.body.typename.trim().toLowerCase()}, defaults: { description: req.body.description.trim() }})
+				.spread((userType, created) => {
+					res.status(created ? 201 : 409).send( '{ "data": "' + stringifyObject(userType) + '" }')
+				})
+				.catch(error => res.status(400).send( '{ "errors": "' + error + '" }'));
+				return res.status(409).send('{ "errors": "' + apiconfig.errors['user_type_exists'] + '" }');
+			}
+		},
+	// delete a user type from the system by name
+	deleteUserType(req, res) {
+			if(!req.body.typename || req.body.typename.trim() == "") {
+                                return res.status(400).send('{ "errors": "' + apiconfig.errors['object_not_found'] + '" }');
+                        } else {
+                                return db.UserType.destroy({ where: {typename: req.body.typename.trim().toLowerCase()} })
+ 					.then(userType => res.status( userType ? 200 : 400).send('{"data": "' + stringifyObject(userType) + '" }' ))
+					.catch(error => res.status(400).send('{ "errors": "' + error + '" }'))
+                        }
+		}, 
 	create(req, res) {
 		infusionsoft.ContactService
 			.add( { FirstName: req.body.first_name, LastName: req.body.last_name, Email: req.body.email } );

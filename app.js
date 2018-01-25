@@ -10,6 +10,9 @@ const session = require('express-session');
 
 const db = require('./server/models/index');
 
+// other required packages
+const stringifyObject = require('stringify-object'); 
+
 // Set up the express app
 const app = express();
 

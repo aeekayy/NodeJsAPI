@@ -10,4 +10,12 @@ config.node_geocoder_options = {
 	formatter: null
 };
 
+config.errors = {
+	'401': "Unauthorized access. Please login with the appropriate credentials.",
+	'default': "An error occurred. That's all I can tell you.",
+	'object_not_found': "Unable to find the object that you're looking for.",
+	'session_not_found': "Unable to find the session. Please log in.",
+	'user_type_exists': "The user type exists already."
+};
+
 module.exports = config; 
