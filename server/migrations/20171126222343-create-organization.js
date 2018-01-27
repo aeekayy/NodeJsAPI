@@ -21,7 +21,7 @@ module.exports = {
       organization_email: { type: Sequelize.STRING(128), unique: true, isEmail: true },
       organization_coordinate: { type: Sequelize.GEOMETRY('POINT') },
       organization_description: { type: Sequelize.TEXT },
-      organization_type: { type: Sequelize.ENUM('production', 'stage' ) }, 
+      organization_type: { type: Sequelize.ENUM('admin', 'production', 'stage', 'test' ) }, 
       organization_rate_per_hour: { type: Sequelize.FLOAT }, 
       organization_fix_rate: { type: Sequelize.FLOAT },
       organization_hours: { type: Sequelize.INTEGER },

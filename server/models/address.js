@@ -2,6 +2,7 @@
 var Promise = require("bluebird");
 const apiconfig = require('../config/apiconfig');
 const node_geocoder = require("node-geocoder");
+const stringifyObject = require("stringify-object");
 
 module.exports = function(sequelize, DataTypes) {
   var Address = sequelize.define('Address', {
@@ -25,27 +26,31 @@ module.exports = function(sequelize, DataTypes) {
    hooks: {
      beforeCreate: (address, options, cb) => {
        return new Promise(function (resolve, reject) {
-       if(!(address.getDataValue('city') && address.getDataValue('state'))) {
-	return sequelize.Promise.reject('No city or state provided.'); 
+       if(!(address.getDataValue('city') && address.getDataValue('state')) && !address.getDataValue('zip')) {
+	reject({ "errors": "'No city, state or zip code provided." }); 
        }
 
-	var geocoder = node_geocoder(apiconfig.node_geocodr_options);
+	var geocoder = node_geocoder(apiconfig.node_geocoder_options);
 	var address_two; 
 	if (address.getDataValue('address_2') == null || address.getDataValue('address_2').trim() == '') {
 		address_two = ""; 
 	} else {
-		address_two = address.getDataValue('address_2'); 
+		address_two = ", " + address.getDataValue('address_2'); 
 	}
 
+	var street = (address.getDataValue('address_1') ? address.getDataValue('address_1') + address_two + ", " : "");
+	var city_state = (address.getDataValue('city') ? address.getDataValue('city') + ", " + address.getDataValue('state') : "");
+
 	// get the coordinates of the address entered 
-	geocoder.geocode(address.getDataValue('address_1') + ", " + address_two + ", " + address.getDataValue('city') + ", " + address.getDataValue('state') + " " + address.getDataValue('zip'))
+	geocoder.geocode({ 'address': street + city_state + " " + address.getDataValue('zip') })
 	.then(geocoding => {
 		var point = { type: 'Point', coordinates: [ geocoding[0].latitude, geocoding[0].longitude ] };
 		address.setDataValue('coordinate', point); 
 		address.setDataValue('map_data', geocoding[0]); 
 		resolve(address);
 		}); 
-	});
+	})
+	.catch( error => reject({ "errors": error }));
      }
    }, 
    instanceMethods: {

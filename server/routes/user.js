@@ -34,11 +34,12 @@ module.exports = (app) => {
 	app.delete('/' + [ 'api', apiconfig.version, sub_name, 'type'].join('/'), userController.deleteUserType);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'type'].join('/'), userController.createUserType); 
 
+	// User actions 
+	app.post('/' + [ 'api', apiconfig.version, sub_name, 'login'].join('/'), userController.login); 
+	app.delete('/' + [ 'api', apiconfig.version, 'users'].join('/'), userController.resetUsers); 
+
 	app.post('/api/' + apiconfig.version + '/user/create', userController.create);
 	app.get('/api/' + apiconfig.version + '/users', userController.listAll);
-	app.post('/api/' + apiconfig.version + '/users/reset', userController.resetUsers);
-	app.post('/api/' + apiconfig.version + '/users/delete', userController.deleteUser);
-	app.post('/api/' + apiconfig.version + '/user/login', userController.login);
 	app.get('/api/' + apiconfig.version + '/user/profile', userController.getProfile); 
 	app.get('/api/' + apiconfig.version + '/user/session', userController.session); 
 	app.get('/api/' + apiconfig.version + '/user/type/:userTypeId', userTypesController.retrieve);

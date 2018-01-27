@@ -8,15 +8,22 @@ const stripe = require('../config/stripe');
 var geocoder = node_geocoder(apiconfig.node_geocoder_options);
 
 module.exports = {
+	// create an organization. Usually this operation is tied to a user creation. 
 	createOrganization(req, res) {
-		return db.Address
-			.create({
-				address_1: req.body.organization_address_1,
-				address_2: req.body.organization_address_2,
-				city: req.body.organization_city,
-				state: req.body.organization_state,
-				zip: req.body.organization_zip
+		return db.Organization
+			.findAll({ where: { organization_email: req.body.organization_email }})
+			.then( results => {
+				if (results.length) { throw new Error("Can not register with that email address as that email address has an account already!")}
 			})
+			.then(noerror => db.Address
+					.create({
+						address_1: req.body.organization_address_1,
+						address_2: req.body.organization_address_2,
+						city: req.body.organization_city,
+						state: req.body.organization_state,
+						zip: req.body.organization_zip 
+					})
+			)
 			.then(address => db.Organization
 				.create({
 					organization_name: req.body.organization_name,
@@ -26,8 +33,8 @@ module.exports = {
 					organization_type: req.body.organization_type
 				})
 			)
-			.then(organization => res.status(201).send(organization))
-			.catch(error => res.status(400).send('{"errors": "' + error + '" }'));
+			.then(organization => res.status(201).send({"data":organization}))
+			.catch(error => { (error.message.startsWith("Can not") ? res.status(409).send({"errors": error.message }) : res.status(400).send({"errors": error })) });
 		},
 	getStage(req, res) {
 		return db.Organization
@@ -99,8 +106,14 @@ module.exports = {
 	deleteOrganization(req, res) {
 		return db.Organization
 			.destroy({ where: { id: req.body.id } })
-			.then(() => res.status(200).send())
-			.catch(error => res.status(400).send(error)); 
+			.then(() => res.status(202).send({"data": "Organization deleted." }))
+			.catch(error => res.status(400).send({"error":error})); 
 		}, 
-
+	// delete organization by id 
+	deleteOrganizationId(req, res) {
+		return db.Organization
+			.destroy({ where: { id: req.params.id } })
+			.then(() => res.status(202).send({"data": "Organization deleted."}))
+			.catch(error => res.status(400).send({"error": error}));
+		},
 };

@@ -24,7 +24,9 @@ const sub_name = 'profile';
  * @function userTypesController.listAll
  */
 module.exports = (app) => {
+	app.delete('/' + [ 'api', apiconfig.version, sub_name, ':id' ].join('/'), organizationsController.deleteOrganizationId);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'create' ].join('/'), organizationsController.createOrganization);
+
 	app.get('/' + [ 'api', apiconfig.version, sub_name ].join('/'), organizationsController.listAll);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'reset' ].join('/'), organizationsController.resetOrganizations);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'search' ].join('/'), organizationsController.searchStages);
