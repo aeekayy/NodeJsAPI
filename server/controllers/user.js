@@ -43,24 +43,33 @@ module.exports = {
 	create(req, res) {
 		infusionsoft.ContactService
 			.add( { FirstName: req.body.first_name, LastName: req.body.last_name, Email: req.body.email } );
-		db.Organization
+		return db.Address
 			.create({
-				organization_type: req.body.type,
-				organization_city: "Long Beach", 
-				organization_state: "CA",
-				orangization_email: req.body.email,
-				organization_type: req.body.UserType
-			});
-		return db.User
-			.create({
-				first_name: req.body.first_name,
-				last_name: req.body.last_name, 
-				username: req.body.username,
-				email: req.body.email, 
-				password_hash: req.body.password	
+				city: "Los Angeles",
+				state: "CA"
 			})
-			.then(user => res.status(201).send(user))
-			.catch(error => res.status(400).send(error));
+			.then( address => 
+				db.Organization
+					.create({
+					organization_type: req.body.type,
+					organization_address: address.id,
+					orangization_email: req.body.email,
+					organization_type: req.body.UserType
+				})
+			)
+			.then( org =>
+				db.User
+				.create({
+					first_name: req.body.first_name,
+					last_name: req.body.last_name, 
+					username: req.body.username,
+					email: req.body.email, 
+					password_hash: req.body.password,
+					organization: org.id
+				})
+			)
+			.then(user => res.status(201).send('{"data": "' + stringifyObject(user) + '" }'))
+			.catch(error => res.status(400).send('{"errors": "' + stringifyObject(error) + '" }'));
 		},
 	getProfile(req, res) {
 		return db.sequelize.query('SELECT username, email, phone_number, first_name || \' \' || last_name AS full_name, organization_name, organization_address_1, organization_address_2, organization_city, "Organizations".organization_state, organization_type, organization_description FROM "Users" LEFT JOIN "Organizations" ON "Users".organization_id="Organizations".id WHERE username=:username LIMIT 1', { replacements: { username: req.query.username }, type: db.sequelize.QueryTypes.SELECT })

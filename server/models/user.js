@@ -16,12 +16,13 @@ module.exports = function(sequelize, DataTypes) {
     user_type: DataTypes.INTEGER,
     two_factor_enabled: { type: DataTypes.BOOLEAN, defaultValue: false, },
     email_verified: DataTypes.DATE,
+    organization: { type: DataTypes.UUID },
     active: { type: DataTypes.BOOLEAN, defaultValue: true, },
   }, {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
-	User.hasMany( models.Organization, { as: 'organizations' } );
+	User.hasOne( models.Organization, { as: 'organization' } );
       },
       validPassword: function(password, passwd, callback) {
         bcrypt.compare(password, passwd, function(err, isMatch) {

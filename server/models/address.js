@@ -5,6 +5,11 @@ const node_geocoder = require("node-geocoder");
 
 module.exports = function(sequelize, DataTypes) {
   var Address = sequelize.define('Address', {
+    id: {
+       type: DataTypes.UUID,
+       primaryKey: true,
+       defaultValue: DataTypes.UUIDV4
+    },
     address_1: { type: DataTypes.STRING(128) },
     address_2: { type: DataTypes.STRING(128) },
     city: { type: DataTypes.STRING(64) },

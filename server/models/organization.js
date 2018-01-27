@@ -2,6 +2,7 @@
 var Promise = require("bluebird");
 const apiconfig = require('../config/apiconfig');
 const node_geocoder = require("node-geocoder");
+const stripe = require('../config/stripe');
 
 module.exports = function(sequelize, DataTypes) {
   var Organization = sequelize.define('Organization', {
@@ -13,6 +14,7 @@ module.exports = function(sequelize, DataTypes) {
     organization_name: { type: DataTypes.STRING(128) },
     organization_address: { type: DataTypes.UUID },
     organization_email: { type: DataTypes.STRING(128), unique: true, isEmail: true },
+    organization_type: { type: DataTypes.ENUM( 'production', 'stage' ) },
     organization_description: { type: DataTypes.TEXT },
     stripe_id: { type: DataTypes.STRING(64) }
   }, {
@@ -24,15 +26,15 @@ module.exports = function(sequelize, DataTypes) {
     },
     hooks: {
 	afterCreate: (organization, options, cb) => {
-		return new Promise(function (resolve, reject) {
-			stripe.customers.create({
-				email: organization.organization_email
-			})
-			.then(customer => {
-				return organization.setDataValue('stripe_id', customer.id);
-				resolve(organization);
-			})
-		});
+		//return new Promise(function (resolve, reject) {
+			//stripe.customers.create({
+			//	email: organization.organization_email
+			//})
+			//.then(customer => {
+			//	return organization.setDataValue('stripe_id', customer.id);
+			//	resolve(organization);
+			//})
+		//});
 	}
     },
     instanceMethods: {

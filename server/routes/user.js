@@ -6,6 +6,7 @@ const loginController = require('../controllers').login;
 const userController = require('../controllers').user;
 const userTypesController = require('../controllers').userTypes; 
 const apiconfig = require('../config/apiconfig');
+const sub_name = 'user';
 
 /** Create a User Type.
  * @name POST/api/user/type
@@ -26,12 +27,12 @@ const apiconfig = require('../config/apiconfig');
  */
 module.exports = (app) => {
 	// ACL stuff dealing with permissions 
-	app.get('/api/' + apiconfig.version + '/acl', userController.getAcl);
-	app.get('/api/' + apiconfig.version + '/acl/:sessionId', userController.getAcl);
+	app.get('/' + [ 'api', apiconfig.version, sub_name, 'acl'].join('/'), userController.getAcl);
+	app.get('/' + [ 'api', apiconfig.version, sub_name, 'acl', ':sessionId'].join('/'), userController.getAcl);
 
 	// User type stuff
-	app.delete('/api/' + apiconfig.version + '/user/type', userController.deleteUserType);
-	app.post('/api/' + apiconfig.version + '/user/type', userController.createUserType); 
+	app.delete('/' + [ 'api', apiconfig.version, sub_name, 'type'].join('/'), userController.deleteUserType);
+	app.post('/' + [ 'api', apiconfig.version, sub_name, 'type'].join('/'), userController.createUserType); 
 
 	app.post('/api/' + apiconfig.version + '/user/create', userController.create);
 	app.get('/api/' + apiconfig.version + '/users', userController.listAll);

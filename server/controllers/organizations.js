@@ -9,21 +9,25 @@ var geocoder = node_geocoder(apiconfig.node_geocoder_options);
 
 module.exports = {
 	createOrganization(req, res) {
-		return db.Organization
+		return db.Address
 			.create({
-				organization_name: req.body.organization_name,
-				organization_description: req.body.organization_description,
-				organization_address_1: req.body.organization_address_1,
-				organization_address_2: req.body.organization_address_2, 
-				organization_city: req.body.organization_city,
-				organization_state: req.body.organization_state,
-				organization_zip: req.body.organization_zip,
-				organization_email: req.body.organization_email, 
-				organization_type: req.body.organization_type
-			}
+				address_1: req.body.organization_address_1,
+				address_2: req.body.organization_address_2,
+				city: req.body.organization_city,
+				state: req.body.organization_state,
+				zip: req.body.organization_zip
+			})
+			.then(address => db.Organization
+				.create({
+					organization_name: req.body.organization_name,
+					organization_description: req.body.organization_description,
+					organization_address: address.id,
+					organization_email: req.body.organization_email, 
+					organization_type: req.body.organization_type
+				})
 			)
 			.then(organization => res.status(201).send(organization))
-			.catch(error => res.status(400).send(error));
+			.catch(error => res.status(400).send('{"errors": "' + error + '" }'));
 		},
 	getStage(req, res) {
 		return db.Organization
