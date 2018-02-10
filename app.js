@@ -5,10 +5,10 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const errorhandler = require('errorhandler');
 const passport = require('passport');
-const passportConfig = require('./server/config/local');
+const passportConfig = require('./config/local');
 const session = require('express-session'); 
 
-const db = require('./server/models/index');
+const db = require('./models/index');
 
 // other required packages
 const stringifyObject = require('stringify-object'); 
@@ -59,7 +59,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Setup a default catch-all route that sends back a welcome message in JSON format.
-require('./server/routes')(app);
+require('./routes')(app);
 app.get('*', (req, res) => res.status(200).send({
 	message: 'Welcome to the beginning of nothingness.',
 }));
