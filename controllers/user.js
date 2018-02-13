@@ -39,6 +39,8 @@ module.exports = {
 					.catch(error => res.status(400).send({ "errors":  error }))
                         }
 		}, 
+
+	// create a new user for the system 
 	create(req, res) {
 		//infusionsoft.ContactService
 		//	.add( { FirstName: req.body.first_name, LastName: req.body.last_name, Email: req.body.email } );
@@ -75,6 +77,8 @@ module.exports = {
 			.catch(error => res.status(400).send({"errors": error }));
 		}
 		},
+	
+	// update the user object 
 	updateUser(req, res) {
 		if(!req.body.username) {
 			return res.status(400).send({ "errors": "Username must be set." }); 
@@ -99,6 +103,32 @@ module.exports = {
 				.catch(error => res.status(400).send({"errors": error}));
 		}
 		
+		},
+	
+	// update the organization object tied to a user
+	updateOrganization(req, res) {
+		if(!req.body.organization_type) {
+			return res.status(400).send({ "errors": "Organization type must be set." });
+		} else {
+			db.User
+				.findById(req.params.sessionId, {})
+			.then( user => db.Organization
+				.update({
+					organization_name: req.body.organization_name, 
+					organization_description: req.body.organization_description, 
+					organization_rate_per_hour: req.body.organization_rate_per_hour, 
+					organization_fix_rate: req.body.organization_fix_rate,
+					organization_hours: req.body.organization_hours, 
+					organization_email: req.body.organization_email
+					stripe_id: req.body.stripe_id
+				}, {
+					where: { id: user.organization },
+					returning: true
+				})
+			)
+			.then(organization => res.status(202).send({"data": organization}))
+			.catch(error => res.status(400).send({"errors": error}));
+		}
 		},
 	getProfile(req, res) {
 		return db.sequelize.query('SELECT username, email, phone_number, first_name || \' \' || last_name AS full_name, organization_name, address_1, address_2, city, state, zip, organization_type, organization_description FROM "Users" LEFT JOIN "Organizations" ON "Users".organization="Organizations".id LEFT JOIN "Addresses" ON "Organizations".organization_address="Addresses".id WHERE username=:username LIMIT 1', { replacements: { username: req.query.username }, type: db.sequelize.QueryTypes.SELECT })
