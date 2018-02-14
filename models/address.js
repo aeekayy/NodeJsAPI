@@ -40,9 +40,10 @@ module.exports = function(sequelize, DataTypes) {
 
 	var street = (address.getDataValue('address_1') ? address.getDataValue('address_1') + address_two + ", " : "");
 	var city_state = (address.getDataValue('city') ? address.getDataValue('city') + ", " + address.getDataValue('state') : "");
-
+	var zip = (address.getDataValue('zip') ? address.getDataValue('zip') : ""); 
+	console.log( street + city_state + " " + zip );
 	// get the coordinates of the address entered 
-	geocoder.geocode({ 'address': street + city_state + " " + address.getDataValue('zip') })
+	geocoder.geocode({ 'address': street + city_state + " " + zip })
 	.then(geocoding => {
 		var point = { type: 'Point', coordinates: [ geocoding[0].latitude, geocoding[0].longitude ] };
 		address.setDataValue('city', geocoding[0].city);
@@ -70,9 +71,10 @@ module.exports = function(sequelize, DataTypes) {
 
         var street = (address.getDataValue('address_1') ? address.getDataValue('address_1') + address_two + ", " : "");
         var city_state = (address.getDataValue('city') ? address.getDataValue('city') + ", " + address.getDataValue('state') : "");
+	var zip = (address.getDataValue('zip') ? address.getDataValue('zip') : "");
 
         // get the coordinates of the address entered
-        geocoder.geocode({ 'address': street + city_state + " " + address.getDataValue('zip') })
+        geocoder.geocode({ 'address': street + city_state + " " + zip })
         .then(geocoding => {
                 var point = { type: 'Point', coordinates: [ geocoding[0].latitude, geocoding[0].longitude ] };
                 address.setDataValue('city', geocoding[0].city);

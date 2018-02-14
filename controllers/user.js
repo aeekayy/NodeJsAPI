@@ -119,7 +119,7 @@ module.exports = {
 					organization_rate_per_hour: req.body.organization_rate_per_hour, 
 					organization_fix_rate: req.body.organization_fix_rate,
 					organization_hours: req.body.organization_hours, 
-					organization_email: req.body.organization_email
+					organization_email: req.body.organization_email,
 					stripe_id: req.body.stripe_id
 				}, {
 					where: { id: user.organization },
