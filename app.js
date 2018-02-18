@@ -9,6 +9,7 @@ const passportConfig = require('./config/local');
 const session = require('express-session'); 
 
 const db = require('./models/index');
+const rollbar = new Rollbar("c30458e8326a44fea52a5238d2c2ec43");
 
 // other required packages
 const stringifyObject = require('stringify-object'); 
@@ -63,8 +64,11 @@ require('./routes')(app);
 app.get('*', (req, res) => res.status(200).send({
 	message: 'Welcome to the beginning of nothingness.',
 }));
-app.post('*', (req, res) => res.status(400).send({
-	message: 'I think you found a black hole. Good for you. Tell NASA.',
-}));
+app.post('*', (req, res) => { 
+	rollbar.log("Hit an undefined API endpoint.");
+	res.status(400).send({
+		message: 'I think you found a black hole. Good for you. Tell NASA.',
+	})
+);
 
 module.exports = app;

@@ -44,7 +44,7 @@ module.exports = {
 		geocoder.geocode(req.body.search_user_location)
 			.then(geocoding => {
 				db.sequelize
-				.query("SELECT \"StageSpaces\"id, stage_name, stage_description, \"Addresses\".coordinate, round(CAST(ST_DistanceSphere(\"Addresses\".coordinate, ST_GeomFromText('POINT(" + geocoding[0].latitude + " " + geocoding[0].longitude + ")', 4326)) as numeric)*0.000621371, 2) as distance, ts_rank_cd(search_stage_space_idx, to_tsquery('" + req.body.search_query + "')) as rank FROM \"StageSpaces\" JOIN \"Addresses\" ON \"StageSpaces\".stage_address = \"Addresses\".id WHERE search_stage_space_idx @@ plainto_tsquery('english', '" + req.body.search_query + "') ORDER BY rank DESC, distance DESC LIMIT 10 OFFSET 10*" + req.body.search_offset + ";")
+				.query("SELECT \"StageSpaces\".id, stage_name, stage_description, stage_rate_per_hour AS price, \"Addresses\".coordinate, \"Addresses\".city, round(CAST(ST_DistanceSphere(\"Addresses\".coordinate, ST_GeomFromText('POINT(" + geocoding[0].latitude + " " + geocoding[0].longitude + ")', 4326)) as numeric)*0.000621371, 2) as distance, ts_rank_cd(search_stage_space_idx, to_tsquery('" + req.body.search_query + "')) as rank FROM \"StageSpaces\" JOIN \"Addresses\" ON \"StageSpaces\".stage_address = \"Addresses\".id WHERE search_stage_space_idx @@ plainto_tsquery('english', '" + req.body.search_query + "') ORDER BY rank DESC, distance DESC LIMIT 10 OFFSET 10*" + req.body.search_offset + ";")
 				.then(stagespaces => res.status(200).send(stagespaces))
 				.catch(error => res.status(400).send(error)); 
 			});
