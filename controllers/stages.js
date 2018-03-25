@@ -7,10 +7,6 @@ const passport = require('passport');
 var geocoder = node_geocoder(apiconfig.node_geocoder_options);
 
 module.exports = {
-	test(req, res) {
-			return geocoder.geocode('47 Discovery, Irvine, CA')
-				.then(geocoding => res.status(200).send(geocoding));
-		}, 
 	createStageSpace(req, res) {
 		return db.Address
 			.create({
@@ -34,9 +30,9 @@ module.exports = {
 			.catch(error => res.status(400).send(error));
 		},
 	getStage(req, res) {
-		return db.StageSpace
-			.findById(req.params.id)
-			.then(stagespace => res.status(200).send(stagespace))
+		db.sequelize
+			.query("SELECT stage_name, \"Addresses\".address_1 AS street_address, \"Addresses\".city AS city, \"Addresses\".state AS geo_state, \"Addresses\".zip AS zip_code, \"Addresses\".coordinate AS geo_coordinate, stage_description, stage_rate_per_hour, stage_fix_rate, stage_hours, rating from \"StageSpaces\" LEFT OUTER JOIN \"Addresses\" ON \"StageSpaces\".stage_address = \"Addresses\".id WHERE \"StageSpaces\".id ='" + req.params.id + "';")
+			.then(stagespace => res.status(200).send({ data: stagespace[0] }))
 			.catch(error => res.status(400).send(error));
 		},
 	searchStages(req, res) {

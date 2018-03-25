@@ -9,6 +9,7 @@ const passportConfig = require('./config/local');
 const session = require('express-session'); 
 
 const db = require('./models/index');
+const Rollbar = require('rollbar');
 const rollbar = new Rollbar("c30458e8326a44fea52a5238d2c2ec43");
 
 // other required packages
@@ -69,6 +70,7 @@ app.post('*', (req, res) => {
 	res.status(400).send({
 		message: 'I think you found a black hole. Good for you. Tell NASA.',
 	})
+	}
 );
 
 module.exports = app;
