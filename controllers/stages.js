@@ -56,6 +56,14 @@ module.exports = {
 			})
 			.then(rating => res.status(201).send({ data: rating }))
 			.catch(error => res.status(400).send( { error: error }));
+		},
+	// Get a list of reviews by stage id
+	//
+	getReviews(req, res) {
+		return db.Rating
+			.findAll({where: { stage_id: req.params.id }, limit: 5, offset: req.query.offset} )
+			.then( ratings => { console.log(ratings); res.status(200).send({data: ratings }) })
+			.catch(error => res.status(400).send( { error: error }));
 		}, 
 	searchStages(req, res) {
 		if(!req.body.search_offset) { return res.status(400).send("Please provide an offset."); }
