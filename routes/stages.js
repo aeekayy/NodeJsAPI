@@ -25,9 +25,11 @@ const sub_name = 'stages';
  */
 module.exports = (app) => {
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'create' ].join('/'), stagesController.createStageSpace);
-	app.get('/' + [ 'api', apiconfig.version, sub_name ].join('/'), stagesController.listAll);
+	app.get('/' + [ 'api', apiconfig.version, sub_name, 'list' ].join('/'), stagesController.listAll);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'reset' ].join('/'), stagesController.resetStageSpaces);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'search' ].join('/'), stagesController.searchStages);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'delete' ].join('/'), stagesController.deleteStageSpace);
+	app.post('/' + [ 'api', apiconfig.version, 'review' ].join('/'), stagesController.addReview);
 	app.get('/' + [ 'api', apiconfig.version, sub_name, ':id' ].join('/'), stagesController.getStage);
+	app.get('/' + [ 'api', apiconfig.version, sub_name, 'search', 'count' ].join('/'), stagesController.getCount);
 };

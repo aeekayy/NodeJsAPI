@@ -6,6 +6,11 @@ const SALT_ROUNDS = 10;
 
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define('User', {
+    id: {
+       type: DataTypes.UUID,
+       primaryKey: true,
+       defaultValue: DataTypes.UUIDV4
+    },
     username: { type: DataTypes.STRING, unique: true, allowNull: false, validate: { notEmpty: true } },
     email: { type: DataTypes.STRING, unique: true, allowNull: false, isEmail: true },
     phone_number: DataTypes.STRING,

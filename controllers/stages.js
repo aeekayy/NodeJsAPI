@@ -30,18 +30,40 @@ module.exports = {
 			.catch(error => res.status(400).send(error));
 		},
 	getStage(req, res) {
-		db.sequelize
+		return db.sequelize
 			.query("SELECT stage_name, \"Addresses\".address_1 AS street_address, \"Addresses\".city AS city, \"Addresses\".state AS geo_state, \"Addresses\".zip AS zip_code, \"Addresses\".coordinate AS geo_coordinate, stage_description, stage_rate_per_hour, stage_fix_rate, stage_hours, round(rating * 2)/2 AS rating from \"StageSpaces\" LEFT OUTER JOIN \"Addresses\" ON \"StageSpaces\".stage_address = \"Addresses\".id WHERE \"StageSpaces\".id ='" + req.params.id + "';")
 			.then(stagespace => res.status(200).send({ data: stagespace[0] }))
 			.catch(error => res.status(400).send(error));
 		},
+	getCount(req, res) {
+                geocoder.geocode(req.query.search_user_location)
+                        .then(geocoding => {
+                                return db.sequelize
+                                .query("SELECT count(*) FROM \"StageSpaces\"  INNER JOIN \"Addresses\" ON \"StageSpaces\".stage_address = \"Addresses\".id WHERE search_stage_space_idx @@ plainto_tsquery('english', '" + req.query.search_query + "') AND round(CAST(ST_DistanceSphere(\"Addresses\".coordinate, ST_GeomFromText('POINT(34.0522342 -118.2436849)', 4326)) as numeric)*0.000621371, 2) < 50;")
+                                .then(count => res.status(200).send( { data: count[0][0] }))
+                                .catch(error => res.status(400).send( { error: error }));
+                        });
+                },
+	// add a review from the authenticated user
+	//
+	addReview(req, res) {
+		return db.Rating
+			.create({
+				stage_id: req.body.stage_id, 
+				user_id: req.body.user_id, 
+				rating: req.body.rating, 
+				review: req.body.review
+			})
+			.then(rating => res.status(201).send({ data: rating }))
+			.catch(error => res.status(400).send( { error: error }));
+		}, 
 	searchStages(req, res) {
 		if(!req.body.search_offset) { return res.status(400).send("Please provide an offset."); }
 		geocoder.geocode(req.body.search_user_location)
 			.then(geocoding => {
 				db.sequelize
-				.query("SELECT \"StageSpaces\".id, stage_name, stage_description, stage_rate_per_hour AS price, \"Addresses\".coordinate, \"Addresses\".city, round(CAST(ST_DistanceSphere(\"Addresses\".coordinate, ST_GeomFromText('POINT(" + geocoding[0].latitude + " " + geocoding[0].longitude + ")', 4326)) as numeric)*0.000621371, 2) as distance, ts_rank_cd(search_stage_space_idx, to_tsquery('" + req.body.search_query + "')) as rank FROM \"StageSpaces\" JOIN \"Addresses\" ON \"StageSpaces\".stage_address = \"Addresses\".id WHERE search_stage_space_idx @@ plainto_tsquery('english', '" + req.body.search_query + "') ORDER BY rank DESC, distance DESC LIMIT 10 OFFSET 10*" + req.body.search_offset + ";")
-				.then(stagespaces => res.status(200).send(stagespaces))
+				.query("SELECT \"StageSpaces\".id, stage_name, stage_description, stage_rate_per_hour AS price, \"Addresses\".coordinate, \"Addresses\".city, round(CAST(ST_DistanceSphere(\"Addresses\".coordinate, ST_GeomFromText('POINT(" + geocoding[0].latitude + " " + geocoding[0].longitude + ")', 4326)) as numeric)*0.000621371, 2) as distance, ts_rank_cd(search_stage_space_idx, to_tsquery('" + req.body.search_query + "')) as rank, round(rating * 2)/2 AS rating FROM \"StageSpaces\" JOIN \"Addresses\" ON \"StageSpaces\".stage_address = \"Addresses\".id WHERE search_stage_space_idx @@ plainto_tsquery('english', '" + req.body.search_query + "') AND round(CAST(ST_DistanceSphere(\"Addresses\".coordinate, ST_GeomFromText('POINT(34.0522342 -118.2436849)', 4326)) as numeric)*0.000621371, 2) < 50 ORDER BY rank DESC, distance DESC LIMIT 10 OFFSET 10*" + req.body.search_offset + ";")
+				.then(stagespaces => res.status(200).send( { data: stagespaces[0] }))
 				.catch(error => res.status(400).send(error)); 
 			});
 		},
