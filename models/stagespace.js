@@ -20,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
 	StageSpace.hasOne( models.Address, { as: 'stage_address' });
       },
       getStage: function(id) {
-                return sequelize.query('select stage_name, "Addresses".address_1 AS street_address, "Addresses".city AS city, "Addresses".state AS geo_state, "Addresses".zip AS zip_code, "Addresses".coordinate AS geo_coordinate, stage_description, stage_rate_per_hour, stage_fix_rate, stage_hours, rating from "StageSpaces" LEFT OUTER JOIN "Addresses" ON "StageSpaces".stage_address = "Addresses".id WHERE "StageSpaces".id = :stageId', {
+                return sequelize.query('select stage_name, "Addresses".address_1 AS street_address, "Addresses".city AS city, "Addresses".state AS geo_state, "Addresses".zip AS zip_code, "Addresses".coordinate AS geo_coordinate, stage_description, stage_rate_per_hour, stage_fix_rate, stage_hours, round(rating * 2)/2 AS rating from "StageSpaces" LEFT OUTER JOIN "Addresses" ON "StageSpaces".stage_address = "Addresses".id WHERE "StageSpaces".id = :stageId', {
                 raw: true,
                 replacements: { stageId: id },
                 type: QueryTypes.SELECT
