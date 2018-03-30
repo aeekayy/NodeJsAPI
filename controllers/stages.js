@@ -31,7 +31,7 @@ module.exports = {
 		},
 	getStage(req, res) {
 		return db.sequelize
-			.query("SELECT stage_name, \"Addresses\".address_1 AS street_address, \"Addresses\".city AS city, \"Addresses\".state AS geo_state, \"Addresses\".zip AS zip_code, \"Addresses\".coordinate AS geo_coordinate, stage_description, stage_rate_per_hour, stage_fix_rate, stage_hours, round(rating * 2)/2 AS rating from \"StageSpaces\" LEFT OUTER JOIN \"Addresses\" ON \"StageSpaces\".stage_address = \"Addresses\".id WHERE \"StageSpaces\".id ='" + req.params.id + "';")
+			.query("SELECT stage_name, \"Addresses\".address_1 AS street_address, \"Addresses\".city AS city, \"Addresses\".state AS geo_state, \"Addresses\".zip AS zip_code, \"Addresses\".coordinate AS geo_coordinate, stage_description, stage_rate_per_hour, stage_fix_rate, stage_hours, round(rating * 2)/2 AS rating, array_agg(\"Images\".image_url) as image_urls from \"StageSpaces\" LEFT OUTER JOIN \"Addresses\" ON \"StageSpaces\".stage_address = \"Addresses\".id LEFT JOIN \"Images\" ON \"Images\".owner_id = \"StageSpaces\".id WHERE \"StageSpaces\".id ='" + req.params.id + "'  GROUP BY \"StageSpaces\".id, \"Addresses\".id;")
 			.then(stagespace => res.status(200).send({ data: stagespace[0] }))
 			.catch(error => res.status(400).send(error));
 		},
