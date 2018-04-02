@@ -131,7 +131,7 @@ module.exports = {
 		}
 		},
 	getProfile(req, res) {
-		return db.sequelize.query('SELECT username, email, phone_number, first_name || \' \' || last_name AS full_name, organization_name, address_1, address_2, city, state, zip, organization_type, organization_description FROM "Users" LEFT JOIN "Organizations" ON "Users".organization="Organizations".id LEFT JOIN "Addresses" ON "Organizations".organization_address="Addresses".id WHERE username=:username OR id=:uid LIMIT 1', { replacements: { uid, req.query.uid, username: req.query.username }, type: db.sequelize.QueryTypes.SELECT })
+		return db.sequelize.query('SELECT username, email, phone_number, first_name || \' \' || last_name AS full_name, organization_name, address_1, address_2, city, state, zip, organization_type, organization_description FROM "Users" LEFT JOIN "Organizations" ON "Users".organization="Organizations".id LEFT JOIN "Addresses" ON "Organizations".organization_address="Addresses".id WHERE username=:username OR id=:uid LIMIT 1', { replacements: { uid: req.query.uid, username: req.query.username }, type: db.sequelize.QueryTypes.SELECT })
 		.then(users => res.status(200).send({"data":users}))
 		.catch(error => res.status(400).send({"errors":error}));
 		}, 
