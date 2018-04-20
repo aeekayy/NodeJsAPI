@@ -39,8 +39,8 @@ module.exports = {
 	getStage(req, res) {
 		return db.Organization
 			.findById(req.params.id)
-			.then(organization => res.status(200).send(organization))
-			.catch(error => res.status(400).send(error));
+			.then(organization => res.status(200).send({"data":organization}))
+			.catch(error => res.status(400).send({"errors":error}));
 		},
 	createSubscription(req, res) {
 		return db.Organization
