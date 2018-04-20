@@ -7,15 +7,14 @@ module.exports = function(sequelize, DataTypes) {
        primaryKey: true,
        defaultValue: DataTypes.UUIDV4
     },
-    stage_id: { type: DataTypes.UUID }, 
-    user_id: { type: DataTypes.UUID }, 
+    StageId: { type: DataTypes.UUID }, 
+    UserId: { type: DataTypes.UUID }, 
     rating: { type: DataTypes.FLOAT }, 
     review: { type: DataTypes.TEXT },
   }, {
+    name: { singular: 'Rating', plural: 'Ratings' }, 
     classMethods: {
       associate: function(models) {
-	Rating.hasOne( models.StageSpace, { as: 'stage_id' });
-	Rating.hasOne( models.User, { as: 'user_id' }); 
       }
     },
     hooks: {

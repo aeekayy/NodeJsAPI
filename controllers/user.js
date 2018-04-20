@@ -131,9 +131,21 @@ module.exports = {
 		}
 		},
 	getProfile(req, res) {
-		return db.sequelize.query('SELECT username, email, phone_number, first_name || \' \' || last_name AS full_name, organization_name, address_1, address_2, city, state, zip, organization_type, organization_description FROM "Users" LEFT JOIN "Organizations" ON "Users".organization="Organizations".id LEFT JOIN "Addresses" ON "Organizations".organization_address="Addresses".id WHERE username=:username OR id=:uid LIMIT 1', { replacements: { uid: req.query.uid, username: req.query.username }, type: db.sequelize.QueryTypes.SELECT })
+		return db.sequelize.query('SELECT username, email, phone_number, first_name, last_name, first_name || \' \' || last_name AS full_name, organization_name, address_1, address_2, city, state, zip, organization_type, organization_description FROM "Users" LEFT JOIN "Organizations" ON "Users".organization="Organizations".id LEFT JOIN "Addresses" ON "Organizations".organization_address="Addresses".id WHERE username=:username OR "Users".id=:uid LIMIT 1', { replacements: { uid: ( typeof req.query.uid !== 'undefined' ? req.query.uid.replace(/[^0-9a-zA-Z\-]/gi, '') : '2d1df595-e47d-40af-b7b0-0d7138bfcefb' ), username: ( typeof req.query.username !== 'undefined' ? req.query.username.replace(/[^0-9a-zA-Z\-]/gi, '') : '') }, type: db.sequelize.QueryTypes.SELECT })
 		.then(users => res.status(200).send({"data":users}))
 		.catch(error => res.status(400).send({"errors":error}));
+		},
+	getProfileURI(req, res) {
+                return db.sequelize.query('SELECT username, email, phone_number, first_name, last_name, first_name || \' \' || last_name AS full_name, organization_name, address_1, address_2, city, state, zip, organization_type, organization_description FROM "Users" LEFT JOIN "Organizations" ON "Users".organization="Organizations".id LEFT JOIN "Addresses" ON "Organizations".organization_address="Addresses".id WHERE "Users".id=:uid LIMIT 1', { replacements: { uid: ( typeof req.params.id !== 'undefined' ? req.params.id.replace(/[^0-9a-zA-Z\-]/gi, '') : '2d1df595-e47d-40af-b7b0-0d7138bfcefb' ), username: ( typeof req.params.id !== 'undefined' ? req.params.id.replace(/[^0-9a-zA-Z\-]/gi, '') : '') }, type: db.sequelize.QueryTypes.SELECT })
+                .then(users => res.status(200).send({"data":users}))
+                .catch(error => res.status(400).send({"errors":error}));
+                }, 
+	updateProfile(req, res) {
+		return db.User.update( 
+			{ first_name: req.body.first_name, last_name: req.body.last_name, phone_number: req.body.phone_number, email: req.body.email },
+			{ where: { id: req.params.id }, returning: true } )
+			.then( user => res.status(202).send({ "data": user }))
+			.catch(error => res.status(400).send({"errors": error})); 
 		}, 
 	listAll(req, res) {
                 return db.User

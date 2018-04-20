@@ -32,5 +32,6 @@ module.exports = (app) => {
 	app.post('/' + [ 'api', apiconfig.version, 'review' ].join('/'), stagesController.addReview);
 	app.get('/' + [ 'api', apiconfig.version, 'review', ':id' ].join('/'), stagesController.getReviews);
 	app.get('/' + [ 'api', apiconfig.version, sub_name, ':id' ].join('/'), stagesController.getStage);
+	app.get('/' + [ 'api', apiconfig.version, 'raw', ':id' ].join('/'), stagesController.getStageRaw);
 	app.get('/' + [ 'api', apiconfig.version, sub_name, 'search', 'count' ].join('/'), stagesController.getCount);
 };

@@ -28,13 +28,19 @@ fs
      db[model.name] = model;
   });
 
-Object.keys(db).forEach(function(modelName) {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
-
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+// Define relations and associations
+//
+// db.Organization.hasOne(db.Address, { foreignKey: 'organization_address', sourceKey: 'id', as: 'address' });
+db.Organization.hasMany(db.User, { foreignKey: 'organization', sourceKey: 'id', as: 'users' });
+// db.StageSpace.hasOne(db.Address, { foreignKey: 'id', targetKey: 'stage_address', as: 'address' });
+db.Address.belongsTo(db.StageSpace, { foreignKey: 'id', targetKey: 'stage_address', as: 'address' });
+// db.Organization.hasMany(db.User, { foreignKey: 'ratings', sourceKey: 'id', as: 'users' });
+db.User.belongsTo(db.Organization, { foreignKey: 'organization', targetKey: 'id', as: 'user_organization' });
+db.User.hasMany(db.Rating, { foreginKey: 'id', as: 'Ratings' });
+db.Rating.belongsTo( db.User, { foreginKey: 'id', sourceKey: 'source_id', as: 'User' });
+db.Rating.belongsTo( db.StageSpace, { foreignKey: 'StageId', targetKey: 'id', as: 'stage' });
 
 module.exports = db;

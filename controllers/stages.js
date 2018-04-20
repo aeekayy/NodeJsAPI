@@ -35,6 +35,12 @@ module.exports = {
 			.then(stagespace => res.status(200).send({ data: stagespace[0] }))
 			.catch(error => res.status(400).send(error));
 		},
+	getStageRaw(req, res) {
+		return db.StageSpace
+			.findAll({where: { id: req.params.id }, include: [{ model: db.Address, as: 'address' }], limit: 1 })
+			.then( stage => res.status(200).send({data: stage}))
+			.catch(error => res.status(400).send({ error: error }) && console.log(error)); 
+		},
 	getCount(req, res) {
                 geocoder.geocode(req.query.search_user_location)
                         .then(geocoding => {
@@ -49,8 +55,8 @@ module.exports = {
 	addReview(req, res) {
 		return db.Rating
 			.create({
-				stage_id: req.body.stage_id, 
-				user_id: req.body.user_id, 
+				StageId: req.body.StageId, 
+				UserId: req.body.UserId, 
 				rating: req.body.rating, 
 				review: req.body.review
 			})
@@ -61,8 +67,8 @@ module.exports = {
 	//
 	getReviews(req, res) {
 		return db.Rating
-			.findAll({where: { stage_id: req.params.id }, limit: 5, offset: req.query.offset} )
-			.then( ratings => { console.log(ratings); res.status(200).send({data: ratings }) })
+			.findAll({where: { StageId: req.params.id }, include: [{ model: db.User, as: 'User' }], limit: 5, offset: req.query.offset} )
+			.then( ratings => { res.status(200).send({data: ratings }) })
 			.catch(error => res.status(400).send( { error: error }));
 		}, 
 	searchStages(req, res) {

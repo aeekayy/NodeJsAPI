@@ -42,6 +42,10 @@ module.exports = (app) => {
 	app.put('/api/' + apiconfig.version + '/user/profile', userController.updateUser);
 	app.get('/api/' + apiconfig.version + '/users', userController.listAll);
 	app.get('/api/' + apiconfig.version + '/user/profile', userController.getProfile); 
+	// Profile specific tasks 
+	app.get('/api/' + apiconfig.version + '/user/:id', userController.getProfileURI); 
+	app.put('/api/' + apiconfig.version + '/user/:id', userController.updateProfile); 
+
 	app.get('/api/' + apiconfig.version + '/user/session', userController.session); 
 	app.get('/api/' + apiconfig.version + '/user/type/:userTypeId', userTypesController.retrieve);
 	app.get('/api/' + apiconfig.version + '/user/types', userTypesController.listAll);

@@ -26,8 +26,6 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
-	User.hasOne( models.Organization, { as: 'organization' } );
       },
       validPassword: function(password, passwd, callback) {
         bcrypt.compare(password, passwd, function(err, isMatch) {
@@ -105,12 +103,5 @@ module.exports = function(sequelize, DataTypes) {
     }
   });
 
-  //User.associate = (models) => {
-  //  User.hasMany(models.UserType, {
-  //    foreignKey: 'userId',
-  //    as: 'userTypes'
-  //  });
-  //};
-  
   return User;
 };

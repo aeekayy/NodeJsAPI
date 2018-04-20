@@ -20,8 +20,6 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-	Organization.hasMany( models.User, { as: 'users' } );
-	Organization.hasOne( models.Address, { as: 'organization_address' });
       }
     },
     hooks: {
