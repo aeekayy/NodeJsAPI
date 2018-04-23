@@ -16,6 +16,7 @@ module.exports = function(sequelize, DataTypes) {
     phone_number: DataTypes.STRING,
     password_hash: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { notEmpty: true } },
     password_salt: DataTypes.STRING,
+    profile_picture: { type: DataTypes.UUID },
     first_name: DataTypes.STRING,
     last_name: DataTypes.STRING,
     user_type: DataTypes.INTEGER,
