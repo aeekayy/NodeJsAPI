@@ -8,6 +8,7 @@ module.exports = function(sequelize, DataTypes) {
        defaultValue: DataTypes.UUIDV4
     },
     owner_id: { type: DataTypes.UUID }, 
+    description: { type: DataTypes.TEXT }, 
     image_url: { type: DataTypes.STRING },
   }, {
     classMethods: {

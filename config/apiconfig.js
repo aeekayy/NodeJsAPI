@@ -1,6 +1,7 @@
 var config = {};
 
 config.version = 'v1'; 
+config.img_loc = 'images.stagehunters.com'; 
 
 config.node_geocoder_options = {
 	provider: 'google',
