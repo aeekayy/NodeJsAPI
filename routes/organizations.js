@@ -31,8 +31,21 @@ module.exports = (app) => {
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'reset' ].join('/'), organizationsController.resetOrganizations);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'search' ].join('/'), organizationsController.searchStages);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, 'delete' ].join('/'), organizationsController.deleteOrganization);
+	app.post('/'+ [ 'api', apiconfig.version, sub_name, 'join' ].join('/'), organizationsController.joinOrganization); 
 	app.get('/' + [ 'api', apiconfig.version, sub_name, ':id' ].join('/'), organizationsController.getStage);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, ':id', 'subscribe' ].join('/'), organizationsController.createSubscription);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, ':id', 'cancel-subscription' ].join('/'), organizationsController.deleteSubscription);
 	app.post('/' + [ 'api', apiconfig.version, sub_name, ':id', 'update-subscription' ].join('/'), organizationsController.updateSubscription); 
+
+	// User membership
+	// *****************
+	app.get('/' + [ 'api', apiconfig.version, sub_name, ':id', 'members' ].join('/'), organizationsController.getMembers);
+	app.post('/' + [ 'api', apiconfig.version, sub_name, ':id', 'invite' ].join('/'), organizationsController.inviteMember);
+
+
+	// Stage Membership
+	// *****************
+	app.post('/' + [ 'api', apiconfig.version, sub_name, ':id', 'stage' ].join('/'), organizationsController.addStage);
+	app.get('/' + [ 'api', apiconfig.version, sub_name, ':id', 'stage' ].join('/'), organizationsController.listStage); 
+	app.delete('/' + [ 'api', apiconfig.version, sub_name, ':id', 'stage' ].join('/'), organizationsController.deleteStage);
 };

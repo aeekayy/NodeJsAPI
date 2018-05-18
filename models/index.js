@@ -42,5 +42,7 @@ db.User.belongsTo(db.Organization, { foreignKey: 'organization', targetKey: 'id'
 db.User.hasMany(db.Rating, { foreginKey: 'id', as: 'Ratings' });
 db.Rating.belongsTo( db.User, { foreginKey: 'id', sourceKey: 'source_id', as: 'User' });
 db.Rating.belongsTo( db.StageSpace, { foreignKey: 'StageId', targetKey: 'id', as: 'stage' });
+//db.StageSpace.belongsTo( db.OrganizationStage, { foreginKey: 'StageId', targetKey: 'id', as: 'stage' } );
+db.OrganizationStage.belongsTo(db.StageSpace, { foreginKey: 'StageId',  as: 'Stage' });
 
 module.exports = db;

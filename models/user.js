@@ -46,14 +46,11 @@ module.exports = function(sequelize, DataTypes) {
     		}
 
     		user.email = user.email.toLowerCase();
-		user.setDataValue('phone_number', user.phone_number.replace(/\D/g, ''));
+		if(user.getDataValue('phone_number')) { user.setDataValue('phone_number', user.phone_number.replace(/\D/g, '')) };
 
-        // console.log('user input password_hash: ', user.getDataValue('password_hash'));
-        // console.log('user object => \n', user);
     		if(!user.getDataValue('password_hash')) {
     			return sequelize.Promise.reject('No password provided.');
     		}
-
         bcrypt.genSalt(SALT_ROUNDS,
           function(err, salt) {
             bcrypt.hash(user.getDataValue('password_hash'), salt, null,

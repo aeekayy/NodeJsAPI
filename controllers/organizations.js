@@ -3,7 +3,9 @@ const db = require('../models');
 const node_geocoder = require('node-geocoder'); 
 const local_passport = require('../config/local'); 
 const passport = require('passport'); 
+var Promise = require("bluebird");
 const stripe = require('../config/stripe'); 
+const uuidv4 = require('uuid/v4');
 
 var geocoder = node_geocoder(apiconfig.node_geocoder_options);
 
@@ -108,7 +110,53 @@ module.exports = {
 			.destroy({ where: { id: req.body.id } })
 			.then(() => res.status(202).send({"data": "Organization deleted." }))
 			.catch(error => res.status(400).send({"error":error})); 
+		},
+	joinOrganization(req, res) {
+		return db.User
+			.update( { organization: req.params.id }, { where: { id: req.body.uid }, returning: true })
+			.then( user => res.status(202).send({"data": user }))
+                        .catch(error => res.status(400).send({"errors": error }));
+		},
+	getMembers(req, res) {
+		return db.User
+			.findAll({ where: { organization: req.params.id }})
+			.then( users => res.status(200).send({"data":users}) )
+			.catch(error => res.status(400).send({"errors": error}));
+		},
+	inviteMember(req, res) {
+		return db.User
+			.create({
+				first_name: req.body.first_name,
+				last_name: req.body.last_name,
+				email: req.body.email,
+				username: uuidv4(),
+				password_hash: req.body.password,
+				organization: req.params.id
+			})
+			.then( user => res.status(201).send({"result": "User invited!", "data": user}))
+			.catch(error => res.status(400).send({"errors": error}));
 		}, 
+	addStage(req, res) {
+		return db.OrganizationStage
+			.create({
+				OwnerId: req.params.id, 
+				StageId: req.body.StageId
+			})
+			.then( orgstage => res.status(201).send({"result": "Stage added", "data": orgstage }))
+			.catch(error => res.status(400).send({"errors": error}));
+		},
+	listStage(req, res) {
+		return db.OrganizationStage
+			.findAll({where: { OwnerId: req.params.id}, include: [{ model: db.StageSpace, as: 'Stage' }] })
+			.then( stages => res.status(200).send( { data: stages } ))
+			.catch(error => res.status(400).send({error: error}) && console.log(error));
+		}, 
+	deleteStage(req, res) {
+		return db.OrganizationStage
+			.destroy({ where: { StageId: req.body.stage_id }})
+			.then(() => res.status(202).send({data: "Stage deleted from organization"}))
+			.catch(error => res.status(400).send({"error": error}));
+		},
 	// delete organization by id 
 	deleteOrganizationId(req, res) {
 		return db.Organization
