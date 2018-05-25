@@ -34,4 +34,10 @@ module.exports = (app) => {
 	app.get('/' + [ 'api', apiconfig.version, sub_name, ':id' ].join('/'), stagesController.getStage);
 	app.get('/' + [ 'api', apiconfig.version, 'raw', ':id' ].join('/'), stagesController.getStageRaw);
 	app.get('/' + [ 'api', apiconfig.version, sub_name, 'search', 'count' ].join('/'), stagesController.getCount);
+
+	/** Bookings
+ 	* @name 
+ 	*/
+	app.post('/' + [ 'api', apiconfig.version, sub_name, ':id', 'booking' ].join('/'), stagesController.addBooking);
+	app.get('/' + [ 'api', apiconfig.version, sub_name, ':id', 'booking' ].join('/'), stagesController.getBookings);
 };

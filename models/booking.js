@@ -15,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
 	// reservation is tied to 
     during: { type: DataTypes.RANGE(DataTypes.DATE) }, 
     request: { type: DataTypes.TEXT },
-    status: { type: DataTypes.ENUM( 'reserved', 'pending', 'canceled' ) },
+    status: { type: DataTypes.ENUM( 'reserved', 'pending', 'canceled' ), defaultValue: 'pending' },
   }, {
     classMethods: {
       associate: function(models) {

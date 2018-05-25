@@ -84,20 +84,44 @@ module.exports = {
 	listAll(req, res) {
                 return db.StageSpace
                         .all()
-                        .then(stagespaces => res.status(200).send(stagespaces))
-                        .catch(error => res.status(400).send(error));
+                        .then(stagespaces => res.status(200).send({data: stagespaces}))
+                        .catch(error => res.status(400).send({error: error}));
                 },
 	resetStageSpaces(req, res) {
 		return db.StageSpace
 			.destroy({ where: {}, truncate: true})
-			.then(() => res.status(200).send())
-			.catch(error => res.status(400).send(error));
+			.then(() => res.status(200).send({data: ''}))
+			.catch(error => res.status(400).send({error: error}));
 		},
 	deleteStageSpace(req, res) {
 		return db.StageSpace
 			.destroy({ where: { id: req.body.id } })
-			.then(() => res.status(200).send())
-			.catch(error => res.status(400).send(error)); 
+			.then(() => res.status(200).send({data: ''}))
+			.catch(error => res.status(400).send({ error: error })); 
+		},
+
+	addBooking(req, res) {
+		return db.Booking
+			.create({
+				reserver: req.body.reserver,
+				stage_id: req.params.id,
+				during: [ new Date(Date.UTC(parseInt(req.body.start_year), parseInt(req.body.start_month), parseInt(req.body.start_day))), new Date(Date.UTC(parseInt(req.body.end_year), parseInt(req.body.end_month), parseInt(req.body.end_day), 23, 59, 59)) ],
+				request: req.body.request
+			})
+			.then(booking => res.status(201).send({data: booking }))
+			.catch(error => res.status(400).send({ error: error }));
+		},
+
+	getBookings(req, res) {
+		return db.Booking
+			.findAll({where: { stage_id: req.params.id } })
+			.then(bookings => res.status(200).send({data: bookings}))
+			.catch(error => res.status(400).send({error: error}));
+		},
+
+	getBookedDates(req, res) {
+		return db.Booking
+			.findAll({where: { stage_id: req.params.id }});
 		}, 
 
 };

@@ -48,4 +48,8 @@ module.exports = (app) => {
 	app.post('/' + [ 'api', apiconfig.version, sub_name, ':id', 'stage' ].join('/'), organizationsController.addStage);
 	app.get('/' + [ 'api', apiconfig.version, sub_name, ':id', 'stage' ].join('/'), organizationsController.listStage); 
 	app.delete('/' + [ 'api', apiconfig.version, sub_name, ':id', 'stage' ].join('/'), organizationsController.deleteStage);
+
+	// Bookings
+	// *****************
+	app.get('/' + [ 'api', apiconfig.version, sub_name, ':id', 'bookings' ].join('/'), organizationsController.getBookings);
 };

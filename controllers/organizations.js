@@ -164,4 +164,15 @@ module.exports = {
 			.then(() => res.status(202).send({"data": "Organization deleted."}))
 			.catch(error => res.status(400).send({"error": error}));
 		},
+
+	/*******************************
+ *  Get the bookings by teams/organizations
+ *
+ *  ************************************/
+	getBookings(req, res) {
+		return db.Booking
+			.findAll({ where: { reserver: req.params.id }})
+			.then(bookings => res.status(200).send({"data": bookings}))
+			.catch(error => res.status(400).send({"error": error }));
+		},
 };
